@@ -219,12 +219,12 @@ export default function Home() {
         offset: ["start start", "end start"]
     });
     
-    const smoothHero = useSpring(heroProgress, { stiffness: 45, damping: 28, mass: 0.4 });
+    const smoothHero = useSpring(heroProgress, { stiffness: 180, damping: 35, mass: 0.15 });
     const scaleHero = useTransform(smoothHero, [0, 0.16], [1, 12], { clamp: true });
     const heroOpacity = useTransform(smoothHero, [0, 0.16], [1, 0], { clamp: true });
     const aboutOpacity = useTransform(smoothHero, [0.15, 0.22, 0.35, 0.45], [0, 1, 1, 0], { clamp: true });
     const aboutScale = useTransform(smoothHero, [0.15, 0.45], [0.95, 1.05], { clamp: true });
-    const aboutY = useTransform(smoothHero, [0.15, 0.45], [10, -10], { clamp: true });
+    const aboutY = useTransform(smoothHero, [0.15, 0.45], [50, -20], { clamp: true });
     const bgColor = useTransform(smoothHero, [0.35, 0.5], ["rgba(0,0,0,1)", "rgba(0,0,0,0)"], { clamp: true });
     const textOpacity = useTransform(smoothHero, [0, 0.05, 0.45, 0.55], [1, 0.2, 0.2, 1], { clamp: true });
     const panProgress = useTransform(smoothHero, [0.45, 0.98], [0, 1], { clamp: true });
@@ -234,9 +234,9 @@ export default function Home() {
         return `${v * travel}%`;
     });
     const navPointerEvents = useTransform(textOpacity, (v) => v > 0.1 ? "auto" : "none");
-
+ 
     if (!isClient) return <div style={{ background: "#000", minHeight: "100vh" }} />;
-
+ 
     return (
         <main style={{ backgroundColor: "#000" }}>
             <motion.nav className="nav-overlay" style={{ opacity: textOpacity, pointerEvents: navPointerEvents as any }}>
@@ -251,19 +251,33 @@ export default function Home() {
                 <a href="mailto:vanshsg12@gmail.com"><IconMail /></a>
             </motion.aside>
  
-            <section ref={heroRef} id="home" style={{ height: "800vh", position: "relative" }}>
-                <div id="projects" style={{ position: "absolute", top: "200vh" }} />
+            <section ref={heroRef} id="home" style={{ height: "500vh", position: "relative" }}>
+                <div id="projects" style={{ position: "absolute", top: "125vh" }} />
                 
                 <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden", backgroundColor: "#000" }}>
                     {/* LAYER 1: PROJECTS TRACK */}
                     <div style={{ position: "absolute", inset: 0, zIndex: 10, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                        <div className="carousel-section-header" style={{ marginBottom: "2rem" }}>
+                        <motion.div 
+                            className="carousel-section-header" 
+                            style={{ marginBottom: "2rem" }}
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1.1, ease: "easeOut" }}
+                        >
                             <h2 className="section-main-title">Selected <span style={{ color: "var(--accent)" }}>Projects</span></h2>
-                        </div>
+                        </motion.div>
                         <div className="carousel-view-port">
                             <motion.div className="carousel-track" style={{ x: carouselX }}>
                                 {PROJECTS_DATA.map((project, i) => (
-                                    <CarouselCard key={i} project={project} />
+                                    <motion.div 
+                                        key={i}
+                                        initial={{ opacity: 0, y: 50 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.8, delay: i * 0.05 }}
+                                        viewport={{ once: true, margin: "-50px" }}
+                                    >
+                                        <CarouselCard project={project} />
+                                    </motion.div>
                                 ))}
                             </motion.div>
                         </div>
@@ -303,8 +317,21 @@ export default function Home() {
                                 <div className="about-left">
                                     <div className="about-bg-graphic" aria-hidden="true" />
                                     <div style={{ width: "40px", height: "2px", background: "#fff", marginBottom: "2rem" }} />
-                                    <h1 className="know-me-title">KNOW <span>ME</span></h1>
-                                    <h2 className="about-sub">XR Developer</h2>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 40 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 1.1, ease: "easeOut" }}
+                                    >
+                                        <h1 className="know-me-title">KNOW <span>ME</span></h1>
+                                    </motion.div>
+                                    <motion.h2 
+                                        className="about-sub"
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 1.1, delay: 0.2, ease: "easeOut" }}
+                                    >
+                                        XR Developer
+                                    </motion.h2>
                                     <div className="about-loc">
                                         <MapPin size={14} /> Based in Chennai
                                     </div>
@@ -323,21 +350,24 @@ export default function Home() {
                                     <div className="about-currently-section">
                                         <span className="about-section-label">Currently</span>
                                         <div className="status-grid">
-                                            <div className="status-card">
-                                                <Code size={18} color="var(--accent)" />
-                                                <div className="status-label">Building</div>
-                                                <div className="status-desc">XR interaction systems</div>
-                                            </div>
-                                            <div className="status-card">
-                                                <Compass size={18} color="var(--accent)" />
-                                                <div className="status-label">Exploring</div>
-                                                <div className="status-desc">AI in spatial environments</div>
-                                            </div>
-                                            <div className="status-card">
-                                                <Briefcase size={18} color="var(--accent)" />
-                                                <div className="status-label">Working on</div>
-                                                <div className="status-desc">Real-world AR applications</div>
-                                            </div>
+                                            {[
+                                                { icon: Code, label: "Building", desc: "XR interaction systems" },
+                                                { icon: Compass, label: "Exploring", desc: "AI in spatial environments" },
+                                                { icon: Briefcase, label: "Working on", desc: "Real-world AR applications" }
+                                            ].map((item, idx) => (
+                                                <motion.div 
+                                                    key={idx} 
+                                                    className="status-card"
+                                                    initial={{ opacity: 0, y: 20 }}
+                                                    whileInView={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.6, delay: 0.1 + idx * 0.1 }}
+                                                    viewport={{ once: true }}
+                                                >
+                                                    <item.icon size={18} color="var(--accent)" />
+                                                    <div className="status-label">{item.label}</div>
+                                                    <div className="status-desc">{item.desc}</div>
+                                                </motion.div>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
@@ -348,23 +378,55 @@ export default function Home() {
             </section>
  
             <section id="skills" className="capabilities-section">
-                <div className="carousel-section-header">
+                <motion.div 
+                    className="carousel-section-header"
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1.1, ease: "easeOut" }}
+                >
                     <h2 className="section-main-title">What I <span style={{ color: "var(--accent)" }}>Build</span></h2>
-                </div>
+                </motion.div>
                 <div className="expertise-grid">
                     {EXPERTISE_DATA.map((group, i) => (
-                        <ExpertiseCard key={i} group={group} />
+                        <motion.div 
+                            key={i}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1.1, delay: i * 0.15, ease: "easeOut" }}
+                        >
+                            <ExpertiseCard group={group} />
+                        </motion.div>
                     ))}
                 </div>
             </section>
  
             <section id="technologies" className="content-section" style={{ alignItems: "center", textAlign: "center", display: "flex", flexDirection: "column" }}>
-                <h2 className="section-main-title" style={{ maxWidth: "800px", margin: "0 auto" }}>Core <span style={{ color: "var(--accent)" }}>Technologies</span></h2>
-                <OrbitalTechStack />
+                <motion.h2 
+                    className="section-main-title" 
+                    style={{ maxWidth: "800px", margin: "0 auto" }}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1.1, ease: "easeOut" }}
+                >
+                    Core <span style={{ color: "var(--accent)" }}>Technologies</span>
+                </motion.h2>
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    viewport={{ once: true }}
+                >
+                    <OrbitalTechStack />
+                </motion.div>
             </section>
  
             <section className="resume-strip-section">
-                <div className="resume-strip">
+                <motion.div 
+                    className="resume-strip"
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1.1, ease: "easeOut" }}
+                >
                     <div className="resume-strip-text">
                         <h3>
                             <span style={{ display: "block" }}>WANT TO KNOW MORE</span>
@@ -377,14 +439,19 @@ export default function Home() {
                         <span>Download Resume</span>
                         <div className="download-icon-wrap"><Download size={14} /></div>
                     </a>
-                </div>
+                </motion.div>
             </section>
  
             <footer id="contact" ref={footerRef} className="pro-footer" onMouseMove={handleMouseMove}>
                 <motion.div className="footer-mouse-glow" style={{ left: mouseX, top: mouseY }} />
                 <div className="footer-content">
                     <div className="footer-top">
-                        <motion.h2 className="footer-big-title" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+                        <motion.h2 
+                            className="footer-big-title" 
+                            initial={{ opacity: 0, y: 40 }} 
+                            whileInView={{ opacity: 1, y: 0 }} 
+                            transition={{ duration: 1.1, ease: "easeOut" }} 
+                        >
                             Ready to Build <br/>
                             <span className="footer-accent-text">The Next Reality?</span>
                         </motion.h2>
@@ -393,20 +460,38 @@ export default function Home() {
                         </motion.a>
                     </div>
                     <div className="footer-bottom">
-                        <div className="footer-brand">
+                        <motion.div 
+                            className="footer-brand"
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.1 }}
+                            viewport={{ once: true }}
+                        >
                             <h3 className="footer-logo">SUJAL GUPTA</h3>
                             <p className="footer-tagline">Spatial & Experience Design</p>
-                        </div>
-                        <div className="footer-socials">
+                        </motion.div>
+                        <motion.div 
+                            className="footer-socials"
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            viewport={{ once: true }}
+                        >
                             <a href="https://linkedin.com/in/sujal-gupta-2a7b14251/" target="_blank" rel="noopener noreferrer" className="footer-social-link">LinkedIn</a>
                             <a href="https://github.com/Avrsxvr" target="_blank" rel="noopener noreferrer" className="footer-social-link">Github</a>
                             <a href="https://instagram.com/sujalg_12" target="_blank" rel="noopener noreferrer" className="footer-social-link">Instagram</a>
                             <a href="https://wa.me/917987911292" target="_blank" rel="noopener noreferrer" className="footer-social-link">WhatsApp</a>
-                        </div>
-                        <div className="footer-info">
+                        </motion.div>
+                        <motion.div 
+                            className="footer-info"
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.3 }}
+                            viewport={{ once: true }}
+                        >
                             <span className="copyright">© 2026 All Rights Reserved</span>
                             <span className="location">Based in India</span>
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
             </footer>

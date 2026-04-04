@@ -1831,8 +1831,10 @@ a {
   font-family: var(--font-display);
   font-size: clamp(2rem, 8vw, 8.5rem);
   font-weight: 900;
-  line-height: 0.95;
+  line-height: 1.0;
   margin-bottom: 5rem;
+  padding-right: 0.05em; /* Prevents question mark clipping */
+  overflow: visible;
 }
 
 @media (max-width: 768px) {
