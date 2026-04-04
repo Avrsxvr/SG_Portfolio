@@ -223,7 +223,7 @@ a {
   }
   
   .nav-overlay a {
-    font-size: 0.55rem;
+    font-size: 0.66rem;
     letter-spacing: 0.15em;
     color: rgba(255, 255, 255, 0.6);
   }
@@ -329,7 +329,7 @@ a {
 @media (max-width: 768px) {
   .hero-name-first {
     transform: translateX(-10vw);
-    font-size: clamp(4.3rem, 20vw, 7.2rem);
+    font-size: clamp(5.2rem, 24vw, 8.6rem);
     margin-bottom: -0.2em;
   }
 }
@@ -351,7 +351,7 @@ a {
 @media (max-width: 768px) {
   .hero-name-last {
     transform: translateX(10vw);
-    font-size: clamp(4.3rem, 20vw, 7.2rem);
+    font-size: clamp(5.2rem, 24vw, 8.6rem);
   }
 }
 
@@ -388,7 +388,7 @@ a {
 
 @media (max-width: 768px) {
   .hero-role-label {
-    font-size: 0.7rem;
+    font-size: 0.84rem;
     letter-spacing: 0.3em;
   }
 }
@@ -801,12 +801,12 @@ a {
   }
   
   .carousel-title {
-    font-size: 1.2rem;
+    font-size: 1.45rem;
     margin-bottom: 0.2rem;
   }
   
   .carousel-desc {
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     margin-bottom: 0.5rem;
     display: -webkit-box;
     -webkit-line-clamp: 4;
@@ -824,7 +824,7 @@ a {
 
   .carousel-btn-main {
     padding: 0.6rem 1.2rem;
-    font-size: 0.75rem;
+    font-size: 0.9rem;
   }
 
   .carousel-btn-icon {
@@ -838,12 +838,12 @@ a {
     background: rgba(0, 0, 0, 0.8);
     padding: 0.2rem 0.6rem;
     border-radius: 1rem;
-    font-size: 0.65rem;
+    font-size: 0.78rem;
   }
 
   .carousel-hint {
     margin-top: 1rem;
-    font-size: 0.65rem;
+    font-size: 0.78rem;
   }
 }
 
@@ -936,10 +936,10 @@ a {
   .orbit-center {
     width: 60px;
     height: 60px;
-    font-size: 0.9rem;
+    font-size: 1.08rem;
   }
   .orbit-item {
-    font-size: 0.6rem;
+    font-size: 0.72rem;
     width: var(--tech-mobile-size);
     height: var(--tech-mobile-size);
     padding: 6px;
@@ -1493,8 +1493,21 @@ a {
   }
 
   .know-me-title {
-    font-size: clamp(3rem, 15vw, 5rem);
+    font-size: clamp(3.6rem, 18vw, 6rem);
     margin-bottom: 1rem;
+  }
+
+  .about-sub {
+    font-size: 1.45rem;
+  }
+
+  .about-tagline {
+    font-size: 1.2rem;
+    max-width: 100%;
+  }
+
+  .about-main-text {
+    font-size: 1.2rem;
   }
 
   .status-grid {
@@ -1516,14 +1529,14 @@ a {
 
   .status-label {
     margin: 0;
-    font-size: 0.65rem;
+    font-size: 0.78rem;
     font-weight: 900;
     letter-spacing: 0;
   }
 
   .status-desc {
     display: block; /* Bring back the details */
-    font-size: 0.6rem;
+    font-size: 0.72rem;
     line-height: 1.1;
     margin-top: 0.2rem;
     opacity: 0.8;
@@ -1571,7 +1584,7 @@ a {
 }
 
 .resume-strip-text h3 {
-  font-size: 1.6rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: #fff;
   margin-bottom: 0.5rem;
@@ -1623,19 +1636,42 @@ a {
 }
 
 @media (max-width: 1024px) {
+  .resume-strip-section {
+    padding: 4rem 5vw;
+  }
   .resume-strip {
     flex-direction: column;
     text-align: center;
-    gap: 2rem;
+    gap: 2.5rem;
+  }
+  .resume-strip-text h3 {
+    font-size: 0.85rem;
+    line-height: 1.35;
+    max-width: none;
+    margin: 0 auto 1.5rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .resume-strip-text p {
+    font-size: 0.85rem;
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 768px) {
+  .resume-strip-text h3 {
+    font-size: 0.75rem;
   }
 }
 
 /* ─── PROFESSIONAL EXPERTISE GRID (Blueprint) ─── */
 .capabilities-section {
-  padding: 10rem 5vw;
+  padding: 2rem 5vw 10rem 5vw;
   background: #000;
   position: relative;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+  scroll-margin-top: 0.5rem;
 }
 
 .expertise-grid {
@@ -1752,7 +1788,10 @@ a {
     gap: 2.5rem;
   }
   .expertise-item h4 {
-    font-size: 1.05rem;
+    font-size: 1.25rem;
+  }
+  .expertise-item p {
+    font-size: 1.08rem;
   }
 }
 .resume-strip {
@@ -1761,7 +1800,7 @@ a {
   margin: 0 auto;
 }
 
-.resume-strip-text h3 { font-size: 1.8rem; font-weight: 900; color: #fff; }
+.resume-strip-text h3 { font-size: 2.15rem; font-weight: 900; color: #fff; }
 
 .resume-download-btn {
   display: inline-flex;
@@ -1790,11 +1829,19 @@ a {
 
 .footer-big-title {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 10vw, 12rem);
+  font-size: clamp(2rem, 8vw, 8.5rem);
   font-weight: 900;
-  line-height: 0.85;
+  line-height: 0.95;
   margin-bottom: 5rem;
 }
+
+@media (max-width: 768px) {
+  .footer-big-title {
+    font-size: 2.2rem;
+    margin-bottom: 3rem;
+  }
+}
+
 
 .footer-social-link {
   color: var(--secondary);

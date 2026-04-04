@@ -117,6 +117,12 @@ const PROJECTS_DATA: Project[] = [
 
 const NAV_LINKS = ["Home", "Projects", "Skills", "Contact"];
 
+const IconInstagram = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+);
+
 const CarouselCard = ({ project }: { project: Project }) => {
     return (
         <motion.div className="carousel-project-card" whileHover={{ scale: 1.02 }} transition={{ duration: 0.4 }}>
@@ -130,7 +136,7 @@ const CarouselCard = ({ project }: { project: Project }) => {
                     <h3 className="carousel-title">{project.title}</h3>
                     <p className="carousel-desc">{project.desc}</p>
                     <div className="carousel-actions">
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="carousel-btn-main">
+                        <a href="https://github.com/Avrsxvr" target="_blank" rel="noopener noreferrer" className="carousel-btn-main">
                             Explore <IconGithub />
                         </a>
                     </div>
@@ -213,15 +219,15 @@ export default function Home() {
         offset: ["start start", "end start"]
     });
     
-    const smoothHero = useSpring(heroProgress, { stiffness: 40, damping: 25, mass: 1 });
-    const scaleHero = useTransform(smoothHero, [0, 0.15], [1, 20], { clamp: true });
-    const heroOpacity = useTransform(smoothHero, [0.03, 0.08], [1, 0], { clamp: true });
-    const aboutOpacity = useTransform(smoothHero, [0.08, 0.12, 0.18, 0.22], [0, 1, 1, 0], { clamp: true });
-    const aboutScale = useTransform(smoothHero, [0.08, 0.22], [0.8, 1.2], { clamp: true });
-    const aboutY = useTransform(smoothHero, [0.08, 0.22], [30, -30], { clamp: true });
-    const bgColor = useTransform(smoothHero, [0.2, 0.25], ["rgba(0,0,0,1)", "rgba(0,0,0,0)"], { clamp: true });
-    const textOpacity = useTransform(smoothHero, [0, 0.05, 0.22, 0.26], [1, 0.2, 0.2, 1], { clamp: true });
-    const panProgress = useTransform(smoothHero, [0.25, 0.65], [0, 1], { clamp: true });
+    const smoothHero = useSpring(heroProgress, { stiffness: 45, damping: 28, mass: 0.4 });
+    const scaleHero = useTransform(smoothHero, [0, 0.16], [1, 12], { clamp: true });
+    const heroOpacity = useTransform(smoothHero, [0, 0.16], [1, 0], { clamp: true });
+    const aboutOpacity = useTransform(smoothHero, [0.15, 0.22, 0.35, 0.45], [0, 1, 1, 0], { clamp: true });
+    const aboutScale = useTransform(smoothHero, [0.15, 0.45], [0.95, 1.05], { clamp: true });
+    const aboutY = useTransform(smoothHero, [0.15, 0.45], [10, -10], { clamp: true });
+    const bgColor = useTransform(smoothHero, [0.35, 0.5], ["rgba(0,0,0,1)", "rgba(0,0,0,0)"], { clamp: true });
+    const textOpacity = useTransform(smoothHero, [0, 0.05, 0.45, 0.55], [1, 0.2, 0.2, 1], { clamp: true });
+    const panProgress = useTransform(smoothHero, [0.45, 0.98], [0, 1], { clamp: true });
     const carouselX = useTransform(panProgress, (v) => {
         const isDesktop = typeof window !== 'undefined' && window.innerWidth > 1024;
         const travel = isDesktop ? -50 : -75;
@@ -240,9 +246,9 @@ export default function Home() {
             </motion.nav>
  
             <motion.aside className="social-bar" style={{ opacity: textOpacity, pointerEvents: navPointerEvents as any }}>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><IconLinkedIn /></a>
+                <a href="https://linkedin.com/in/sujal-gupta-2a7b14251/" target="_blank" rel="noopener noreferrer"><IconLinkedIn /></a>
+                <a href="https://github.com/Avrsxvr" target="_blank" rel="noopener noreferrer"><IconGithub /></a>
                 <a href="mailto:vanshsg12@gmail.com"><IconMail /></a>
-                <a href="tel:+91XXXXXXXXXX"><IconPhone /></a>
             </motion.aside>
  
             <section ref={heroRef} id="home" style={{ height: "800vh", position: "relative" }}>
@@ -351,32 +357,35 @@ export default function Home() {
                     ))}
                 </div>
             </section>
-
+ 
             <section id="technologies" className="content-section" style={{ alignItems: "center", textAlign: "center", display: "flex", flexDirection: "column" }}>
                 <h2 className="section-main-title" style={{ maxWidth: "800px", margin: "0 auto" }}>Core <span style={{ color: "var(--accent)" }}>Technologies</span></h2>
                 <OrbitalTechStack />
             </section>
-
+ 
             <section className="resume-strip-section">
                 <div className="resume-strip">
                     <div className="resume-strip-text">
-                        <h3>Interested in my full professional background?</h3>
-                        <p>View or download my detailed resume for more information.</p>
+                        <h3>
+                            <span style={{ display: "block" }}>WANT TO KNOW MORE</span>
+                            <span style={{ display: "block" }}>ABOUT MY WORK?</span>
+                        </h3>
+                        <p>Download my detailed resume for more information.</p>
                     </div>
-                    <a href="/Sujal_Gupta_Resume.pdf" download className="resume-download-btn">
+                    <a href="/Sujal_Resume(XR).pdf" download className="resume-download-btn">
                         <FileText size={20} />
                         <span>Download CV</span>
                         <div className="download-icon-wrap"><Download size={14} /></div>
                     </a>
                 </div>
             </section>
-
+ 
             <footer id="contact" ref={footerRef} className="pro-footer" onMouseMove={handleMouseMove}>
                 <motion.div className="footer-mouse-glow" style={{ left: mouseX, top: mouseY }} />
                 <div className="footer-content">
                     <div className="footer-top">
                         <motion.h2 className="footer-big-title" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-                            Ready to build <br/>
+                            Ready to Build <br/>
                             <span className="footer-accent-text">The Next Reality?</span>
                         </motion.h2>
                         <motion.a href="mailto:vanshsg12@gmail.com" className="footer-cta-magnetic" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -389,10 +398,10 @@ export default function Home() {
                             <p className="footer-tagline">Spatial & Experience Design</p>
                         </div>
                         <div className="footer-socials">
-                            <a href="#" className="footer-social-link">LinkedIn</a>
-                            <a href="#" className="footer-social-link">Github</a>
-                            <a href="#" className="footer-social-link">Twitter</a>
-                            <a href="#" className="footer-social-link">Instagram</a>
+                            <a href="https://linkedin.com/in/sujal-gupta-2a7b14251/" target="_blank" rel="noopener noreferrer" className="footer-social-link">LinkedIn</a>
+                            <a href="https://github.com/Avrsxvr" target="_blank" rel="noopener noreferrer" className="footer-social-link">Github</a>
+                            <a href="https://instagram.com/sujalg_12" target="_blank" rel="noopener noreferrer" className="footer-social-link">Instagram</a>
+                            <a href="https://wa.me/917987911292" target="_blank" rel="noopener noreferrer" className="footer-social-link">WhatsApp</a>
                         </div>
                         <div className="footer-info">
                             <span className="copyright">© 2026 All Rights Reserved</span>
