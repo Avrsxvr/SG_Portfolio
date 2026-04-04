@@ -341,7 +341,7 @@ export default function Home() {
                 </div>
             </section>
  
-            <section id="capabilities" className="capabilities-section">
+            <section id="skills" className="capabilities-section">
                 <div className="carousel-section-header">
                     <h2 className="section-main-title">What I <span style={{ color: "var(--accent)" }}>Build</span></h2>
                 </div>
@@ -352,7 +352,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="skills" className="content-section" style={{ alignItems: "center", textAlign: "center", display: "flex", flexDirection: "column" }}>
+            <section id="technologies" className="content-section" style={{ alignItems: "center", textAlign: "center", display: "flex", flexDirection: "column" }}>
                 <h2 className="section-main-title" style={{ maxWidth: "800px", margin: "0 auto" }}>Core <span style={{ color: "var(--accent)" }}>Technologies</span></h2>
                 <OrbitalTechStack />
             </section>
