@@ -143,7 +143,7 @@ const CarouselCard = ({ project }: { project: Project }) => {
 
 const EXPERTISE_DATA = [
     {
-        category: "01 / XR Development",
+        category: "XR Development",
         color: "var(--accent)",
         skills: [
             { title: "AR Applications (Unity)", desc: "Developing markerless AR applications with accurate object placement and interactive user experiences." },
@@ -152,7 +152,7 @@ const EXPERTISE_DATA = [
         ]
     },
     {
-        category: "02 / Interactive & Web",
+        category: "Interactive & Web",
         color: "var(--accent)",
         skills: [
             { title: "WebAR Experiences", desc: "Creating browser-based AR experiences that enable real-time placement and interaction with 3D content." },
@@ -161,7 +161,7 @@ const EXPERTISE_DATA = [
         ]
     },
     {
-        category: "03 / Intelligent Systems",
+        category: "Intelligent Systems",
         color: "var(--accent)",
         skills: [
             { title: "Computer Vision", desc: "Implementing vision-based features such as detection and tracking to enable context-aware interactions." },
@@ -238,13 +238,13 @@ export default function Home() {
                     <a key={item} href={`#${item.toLowerCase()}`}>{item}</a>
                 ))}
             </motion.nav>
-
+ 
             <motion.aside className="social-bar" style={{ opacity: textOpacity, pointerEvents: navPointerEvents as any }}>
                 <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><IconLinkedIn /></a>
                 <a href="mailto:vanshsg12@gmail.com"><IconMail /></a>
                 <a href="tel:+91XXXXXXXXXX"><IconPhone /></a>
             </motion.aside>
-
+ 
             <section ref={heroRef} id="home" style={{ height: "800vh", position: "relative" }}>
                 <div id="projects" style={{ position: "absolute", top: "200vh" }} />
                 
@@ -265,7 +265,7 @@ export default function Home() {
                             <ArrowLeft size={16} /> Keep scrolling down to explore <ArrowRight size={16} />
                         </div>
                     </div>
-
+ 
                     {/* LAYER 2: ZOOMING ELEMENTS */}
                     <motion.div style={{ position: "absolute", inset: 0, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: bgColor as any, pointerEvents: "none", perspective: "1000px" }}>
                         <motion.div className="z-container hero-z" style={{ scale: scaleHero, opacity: heroOpacity }}>
@@ -282,7 +282,7 @@ export default function Home() {
                                 <Image src="/Gemini_Generated_Image_7577lg7577lg7577-Photoroom.png" alt="Sujal Gupta" width={220} height={220} className="hero-profile-img" priority />
                             </div>
                         </motion.div>
-
+ 
                         <motion.div 
                             className="about-layer"
                             style={{ 
@@ -306,14 +306,14 @@ export default function Home() {
                                         Building XR experiences that <span>feel real.</span>
                                     </p>
                                 </div>
-
+ 
                                 <div className="about-right">
                                     <p className="about-main-text">
                                         I’m an <span className="accent">XR developer</span> building interactive <strong>AR/VR experiences</strong> using Unity and modern spatial technologies. I focus on creating practical, usable products that go beyond experimentation.
                                         <br/><br/>
                                         Alongside my personal projects, I collaborate on select <strong>freelance XR work</strong>, working on real-world interactive solutions. Recently, I’ve been exploring the intersection of <span className="accent">spatial computing</span> and <strong>AI</strong> to build more intuitive and adaptive experiences.
                                     </p>
-
+ 
                                     <div className="about-currently-section">
                                         <span className="about-section-label">Currently</span>
                                         <div className="status-grid">
@@ -340,10 +340,10 @@ export default function Home() {
                     </motion.div>
                 </div>
             </section>
-
+ 
             <section id="capabilities" className="capabilities-section">
                 <div className="carousel-section-header">
-                    <h2 className="section-main-title">Professional <span style={{ color: "var(--accent)" }}>Expertise</span></h2>
+                    <h2 className="section-main-title">What I <span style={{ color: "var(--accent)" }}>Build</span></h2>
                 </div>
                 <div className="expertise-grid">
                     {EXPERTISE_DATA.map((group, i) => (
