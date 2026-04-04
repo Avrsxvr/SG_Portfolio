@@ -374,7 +374,7 @@ export default function Home() {
                     </div>
                     <a href="/Sujal_Resume(XR).pdf" download className="resume-download-btn">
                         <FileText size={20} />
-                        <span>Download CV</span>
+                        <span>Download Resume</span>
                         <div className="download-icon-wrap"><Download size={14} /></div>
                     </a>
                 </div>
