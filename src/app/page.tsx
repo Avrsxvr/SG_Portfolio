@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useAnimationFrame, MotionValue } from "framer-motion";
-import { ExternalLink, ArrowRight, ArrowLeft, MapPin, Cpu, Layers, Glasses, Globe, Sparkles, Code, Compass, Briefcase, FileText, Download, Zap, Brain } from "lucide-react";
+import { ArrowRight, ArrowLeft, MapPin, Code, Compass, Briefcase, FileText, Download } from "lucide-react";
 
 /* ─── Social Icons ─── */
 const IconLinkedIn = () => (
