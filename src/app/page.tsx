@@ -219,15 +219,14 @@ export default function Home() {
     const aboutY = useTransform(smoothHero, [0.15, 0.45], [50, -20], { clamp: true });
     const bgColor = useTransform(smoothHero, [0.35, 0.5], ["rgba(0,0,0,1)", "rgba(0,0,0,0)"], { clamp: true });
     const textOpacity = useTransform(smoothHero, [0, 0.05, 0.45, 0.55], [1, 0.2, 0.2, 1], { clamp: true });
-    const panProgress = useTransform(smoothHero, [0.45, 0.98], [0, 1], { clamp: true });
+    const panProgress = useTransform(smoothHero, [0.45, 0.78], [0, 1], { clamp: true });
     const carouselX = useTransform(panProgress, (v) => {
-        const isDesktop = typeof window !== 'undefined' && window.innerWidth > 1024;
-        const travel = isDesktop ? -50 : -75;
-        return `${v * travel}%`;
+        // Automatically translates exactly to the inner edge of the padded window (90vw available)
+        return `calc(${v * -100}% + ${v * 90}vw)`;
     });
     const navPointerEvents = useTransform(textOpacity, (v) => v > 0.1 ? "auto" : "none");
  
-    if (!isClient) return <div style={{ background: "#000", minHeight: "100vh" }} />;
+    if (!isClient) return <div style={{ background: "#000", minHeight: "100dvh" }} />;
  
     return (
         <main style={{ backgroundColor: "#000" }}>
@@ -243,10 +242,10 @@ export default function Home() {
                 <a href="mailto:vanshsg12@gmail.com"><IconMail /></a>
             </motion.aside>
  
-            <section ref={heroRef} id="home" style={{ height: "500vh", position: "relative" }}>
-                <div id="projects" style={{ position: "absolute", top: "125vh" }} />
+            <section ref={heroRef} id="home" style={{ height: "500dvh", position: "relative" }}>
+                <div id="projects" style={{ position: "absolute", top: "125dvh" }} />
                 
-                <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden", backgroundColor: "#000" }}>
+                <div style={{ position: "sticky", top: 0, height: "100dvh", overflow: "hidden", backgroundColor: "#000" }}>
                     {/* LAYER 1: PROJECTS TRACK */}
                     <div style={{ position: "absolute", inset: 0, zIndex: 10, display: "flex", flexDirection: "column", justifyContent: "center" }}>
                         <motion.div 
@@ -302,7 +301,10 @@ export default function Home() {
                                 scale: aboutScale,
                                 y: aboutY,
                                 position: "absolute",
-                                zIndex: 30
+                                zIndex: 30,
+                                left: 0,
+                                right: 0,
+                                margin: "0 auto"
                             }}
                         >
                             <div className="about-container">
