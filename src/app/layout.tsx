@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Sujal Gupta - Portfolio",
-  description: "An immersive XR portfolio highlighting projects in AR/VR, Spatial Computing, and WebXR.",
+  description: "Sujal Gupta - XR Developer Portfolio showcasing his projects and work in immersive technology.",
   icons: {
     icon: "/Gemini_Generated_Image_7577lg7577lg7577-Photoroom.png",
   },

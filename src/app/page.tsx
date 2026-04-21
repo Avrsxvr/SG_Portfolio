@@ -105,10 +105,10 @@ interface Project {
 }
 
 const PROJECTS_DATA: Project[] = [
-    { title: "SPACESHIP VR", desc: "Immersive spaceship experience with physics-based interactions and dynamic cockpit controls for space exploration.", video: "https://avr-s.vercel.app/Videos/Space%20VR.mp4", color: "#F07400", id: "01" },
-    { title: "VR INTERACTIVE GAME", desc: "Diverse VR gameplay featuring basketball, target shooting, and escape rooms with fluid mechanics.", video: "https://avr-s.vercel.app/Videos/Intro%20TO%20VR%20(demo%20video).mp4", color: "#8800ff", id: "02" },
-    { title: "AR HERITAGE", desc: "Explore India’s cultural heritage interactively with immersive storytelling and 3D visualizations.", video: "https://avr-s.vercel.app/Videos/AR%20heritage.mp4", color: "#00d4ff", id: "03" },
-    { title: "SMART INTERIORS", desc: "Visualize furniture with accurate scaling and positioning.\nCustomize textures for a personalized experience.", video: "https://avr-s.vercel.app/Videos/AR%20furniture%20placing%20-%20WeAR%20Studio%20(720p,%20h264).mp4", color: "#00ff88", id: "04" }
+    { title: "SPACESHIP VR", desc: "Immersive spaceship experience with physics-based interactions and dynamic cockpit controls for space exploration.", video: "/videos/space_vr.mp4", color: "#F07400", id: "01" },
+    { title: "VR INTERACTIVE GAME", desc: "Diverse VR gameplay featuring basketball, target shooting, and escape rooms with fluid mechanics.", video: "/videos/intro_vr.mp4", color: "#8800ff", id: "02" },
+    { title: "AR HERITAGE", desc: "Explore India’s cultural heritage interactively with immersive storytelling and 3D visualizations.", video: "/videos/ar_heritage.mp4", color: "#00d4ff", id: "03" },
+    { title: "SMART INTERIORS", desc: "Visualize furniture with accurate scaling and positioning.\nCustomize textures for a personalized experience.", video: "/videos/ar_furniture.mp4", color: "#00ff88", id: "04" }
 ];
 
 const NAV_LINKS = ["Home", "Projects", "Skills", "Contact"];
