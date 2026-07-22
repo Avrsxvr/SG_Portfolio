@@ -1,0 +1,156 @@
+/* AR Spatial Radar CSS */
+
+.radar-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px; /* Crucial for extreme 3D depth */
+}
+
+/* 3D Wrapper that tilts with mouse */
+.radar-3d-wrapper {
+  position: relative;
+  width: 800px;
+  height: 800px;
+  transform-style: preserve-3d;
+}
+
+/* Background grid */
+.radar-grid {
+  position: absolute;
+  inset: -200px; /* Make it large so edges don't show when tilted */
+  background-image: 
+    linear-gradient(rgba(0, 198, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 198, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  transform: translateZ(-100px); /* Push grid into the background */
+  border-radius: 50%; /* circular grid looks like radar */
+  mask-image: radial-gradient(circle, black 40%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle, black 40%, transparent 70%);
+}
+
+/* The spinning sweep */
+.radar-sweep {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 800px;
+  margin-top: -400px;
+  margin-left: -400px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 70%, rgba(0, 198, 255, 0.1) 90%, rgba(0, 198, 255, 0.6) 100%);
+  animation: sweep 4s linear infinite;
+  transform: translateZ(-99px); /* Just above the grid */
+}
+
+@keyframes sweep {
+  from { transform: translateZ(-99px) rotate(0deg); }
+  to { transform: translateZ(-99px) rotate(360deg); }
+}
+
+/* Center Core */
+.radar-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  margin-left: -5px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 20px 5px var(--accent);
+  transform: translateZ(0px);
+}
+
+/* Concentric Rings */
+.radar-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px dashed rgba(0, 198, 255, 0.15);
+  border-radius: 50%;
+  transform: translateZ(-50px);
+}
+
+.radar-node {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.radar-node::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.radar-node.hovered {
+  box-shadow: 0 0 30px var(--accent), inset 0 0 15px rgba(0,198,255,0.5);
+  border-color: #fff;
+  z-index: 100;
+}
+
+.radar-node.hovered .radar-label {
+  opacity: 1;
+  background: rgba(0, 198, 255, 0.1);
+  border-color: rgba(0, 198, 255, 0.6);
+}
+
+/* The permanently visible label */
+.radar-label {
+  position: absolute;
+  top: -15px;
+  left: 30px;
+  background: rgba(10, 15, 20, 0.5);
+  border-left: 2px solid rgba(0, 198, 255, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.8;
+  transform: translateZ(5px);
+  transition: all 0.3s ease;
+}
+
+.radar-label-title {
+  font-family: var(--font-display); 
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+  margin: 0 0 0.1rem 0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(0, 198, 255, 0.5);
+}
+
+.radar-label-cat {
+  font-family: var(--font-main);
+  font-size: 0.55rem;
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}

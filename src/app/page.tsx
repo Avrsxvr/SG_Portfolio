@@ -2,8 +2,12 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useAnimationFrame, MotionValue } from "framer-motion";
-import { ArrowRight, ArrowLeft, MapPin, Code, Compass, Briefcase, FileText, Download } from "lucide-react";
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate, useAnimationFrame, MotionValue, AnimatePresence } from "framer-motion";
+import { ArrowRight, ArrowLeft, MapPin, Code, Compass, Briefcase, FileText, Download, Plus, Minus } from "lucide-react";
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";
+import Matter from "matter-js";
+import "./physics.css";
 
 /* ─── Social Icons ─── */
 const IconLinkedIn = () => (
@@ -25,74 +29,228 @@ const IconMail = () => (
 );
 
 
-interface TechItem {
-    label: string;
-    size: number;
-    mobileSize: number;
-}
+const CORE_TECH_DATA = [
+    { id: "unity", name: "Unity", category: "Spatial Engine", desc: "Core engine for building 3D VR/AR physics interactions.", useCase: "XR Mechanics & Physics" },
+    { id: "csharp", name: "C#", category: "Core Language", desc: "Primary language for architecture and Unity tooling.", useCase: "System Architecture" },
+    { id: "eighthwall", name: "8th Wall", category: "WebAR Platform", desc: "High-performance markerless WebAR tracking.", useCase: "WebAR Campaigns" },
+    { id: "python", name: "Python", category: "Automation", desc: "Scripting language for models and data pipelines.", useCase: "AI Pipelines" },
+    { id: "mindar", name: "MindAR", category: "WebAR", desc: "WebAR tracking for image and face tracking.", useCase: "Browser Tracking" },
+    { id: "arcore", name: "ARCore", category: "Mobile AR", desc: "Markerless plane detection and motion tracking.", useCase: "Android Spatial AR" },
+    { id: "arkit", name: "ARKit", category: "Mobile AR", desc: "Native augmented reality framework for Apple devices.", useCase: "iOS Spatial AR" },
+    { id: "vuforia", name: "Vuforia", category: "Enterprise AR", desc: "Industrial strength image and model tracking.", useCase: "Enterprise AR" },
+    { id: "threejs", name: "Three.js", category: "Web Graphics", desc: "3D rendering and real-time configurators for web.", useCase: "Web 3D Graphics" },
+    { id: "xri", name: "XR Toolkit", category: "XR Framework", desc: "Unity standard for 6DoF interaction and locomotion.", useCase: "Interaction Systems" },
+    { id: "meta", name: "Meta SDK", category: "VR Headsets", desc: "Native API for Meta Quest hand tracking and presence.", useCase: "Quest Development" }
+];
 
-const OrbitItem = ({ tech, angle, rotation }: { tech: TechItem, angle: number, rotation: MotionValue<number> }) => {
-    const counterRotate = useTransform(rotation, (r: number) => -(r + angle));
-    return (
-        <div 
-            className="orbit-node"
-            style={{ 
-                transform: `rotate(${angle}deg) translateY(calc(-1 * var(--radius)))`,
-                "--tech-size": `${tech.size}px`,
-                "--tech-mobile-size": `${tech.mobileSize}px`
-            } as React.CSSProperties}
-        >
-            <motion.div className="orbit-item-anim" style={{ rotate: counterRotate }}>
-                <div className="orbit-item">{tech.label}</div>
-            </motion.div>
-        </div>
-    );
-};
+const ARCHITECTURE_LAYERS = [
+    {
+        num: "01",
+        title: "CORE ENGINE & LOGIC",
+        subtitle: "Foundation for 3D physics, scene management, and system scripts.",
+        techs: [
+            { name: "Unity 3D", tag: "Spatial Engine", desc: "Physics & 3D Environment Engine" },
+            { name: "C#", tag: "Primary Language", desc: "Core System Scripts & Unity Tooling" }
+        ]
+    },
+    {
+        num: "02",
+        title: "SPATIAL & XR FRAMEWORKS",
+        subtitle: "Cross-platform tracking, locomotion, and WebAR platforms.",
+        techs: [
+            { name: "OpenXR / XR Toolkit", tag: "XR Standard", desc: "6DoF Hand Tracking & Interaction" },
+            { name: "ARCore / ARKit", tag: "Mobile AR", desc: "Markerless Motion & Plane Tracking" },
+            { name: "WebXR API", tag: "Web 3D", desc: "Browser-Native Spatial Computing" },
+            { name: "8th Wall", tag: "WebAR", desc: "Cross-Device Zero-Install WebAR" }
+        ]
+    },
+    {
+        num: "03",
+        title: "WEB 3D & GRAPHICS",
+        subtitle: "Real-time rendering, WebGL shaders, and 3D web experiences.",
+        techs: [
+            { name: "Three.js / WebGL", tag: "Graphics Engine", desc: "Custom Shaders & Product Configurators" }
+        ]
+    },
+    {
+        num: "04",
+        title: "AI & PERCEPTION",
+        subtitle: "Computer vision algorithms, gesture tracking, and adaptive AI.",
+        techs: [
+            { name: "Computer Vision", tag: "OpenCV", desc: "Image Processing & Gesture Tracking" },
+            { name: "Spatial AI", tag: "GenAI", desc: "Adaptive LLM Agents in Spatial Apps" },
+            { name: "Python", tag: "Automation", desc: "Vision Models & Automation Pipelines" }
+        ]
+    }
+];
 
-const OrbitalTechStack = () => {
-    const techItems = [
-        { label: "Unity", size: 90, mobileSize: 65 },
-        { label: "WebXR", size: 100, mobileSize: 70 },
-        { label: "8th Wall", size: 110, mobileSize: 80 },
-        { label: "ARCore", size: 95, mobileSize: 70 },
-        { label: "XR Toolkit", size: 110, mobileSize: 80 },
-        { label: "Computer Vision", size: 130, mobileSize: 95 },
-        { label: "C#", size: 80, mobileSize: 60 },
-        { label: "Spatial AI", size: 110, mobileSize: 80 },
-    ];
-    const rotation = useMotionValue(0);
-    const bonusVelocity = useMotionValue(0);
-    const smoothBonus = useSpring(bonusVelocity, { damping: 30, stiffness: 60 });
-    const [isDragging, setIsDragging] = useState(false);
-    const baseSpeed = 0.2; 
+const MatterPhysicsEngine = () => {
+    const sceneRef = useRef<HTMLDivElement>(null);
+    const engineRef = useRef<Matter.Engine | null>(null);
+    const [positions, setPositions] = useState<{ id: string, x: number, y: number, angle: number }[]>([]);
+    const [isMobile, setIsMobile] = useState(false);
 
-    useAnimationFrame(() => {
-        const currentSpeed = baseSpeed + (smoothBonus.get() * 0.15);
-        rotation.set(rotation.get() + currentSpeed);
-        if (!isDragging && bonusVelocity.get() !== 0) {
-            bonusVelocity.set(bonusVelocity.get() * 0.95);
-            if (Math.abs(bonusVelocity.get()) < 0.001) bonusVelocity.set(0);
+    useEffect(() => {
+        if (!sceneRef.current) return;
+        
+        const mobile = window.innerWidth <= 768;
+        setIsMobile(mobile);
+        const width = mobile ? 360 : 600;
+        const height = mobile ? 360 : 600;
+        const ballRadius = mobile ? 35 : 45;
+
+        const engine = Matter.Engine.create();
+        engineRef.current = engine;
+        const world = engine.world;
+        
+        // Slightly lower gravity for a floaty space feel
+        engine.gravity.y = 0.8;
+
+        // Create the hollow circular boundary
+        const numSegments = 64;
+        const containerRadius = width / 2;
+        const segmentLength = (2 * Math.PI * containerRadius) / numSegments;
+        
+        const boundaryBodies: Matter.Body[] = [];
+        for (let i = 0; i < numSegments; i++) {
+            const angle = (i / numSegments) * Math.PI * 2;
+            const x = containerRadius + Math.cos(angle) * containerRadius;
+            const y = containerRadius + Math.sin(angle) * containerRadius;
+            
+            const segment = Matter.Bodies.rectangle(x, y, segmentLength + 2, 20, {
+                isStatic: true,
+                angle: angle,
+                friction: 0.1,
+                restitution: 0.8, // Bouncy walls
+                render: { visible: false }
+            });
+            boundaryBodies.push(segment);
         }
-    });
+        
+        Matter.World.add(world, boundaryBodies);
+
+        // Create the tech balls
+        const bodies = CORE_TECH_DATA.map((tech, i) => {
+            // Spawn safely in a grid to avoid physics overlapping ejections
+            const cols = mobile ? 3 : 5;
+            const row = Math.floor(i / cols);
+            const col = i % cols;
+            
+            // Map grid across the upper area of the container
+            const startX = containerRadius - ((cols * ballRadius * 1.1) - ballRadius);
+            const x = startX + (col * ballRadius * 2.2) + (Math.random() * 10);
+            const y = ballRadius + 40 + (row * ballRadius * 2.2) + (Math.random() * 10);
+            
+            return Matter.Bodies.circle(x, y, ballRadius, {
+                label: tech.id,
+                restitution: 0.95, // Very bouncy balls
+                friction: 0.005,
+                density: 0.04,
+                render: { visible: false }
+            });
+        });
+        
+        Matter.World.add(world, bodies);
+
+        // Add an invisible physical cursor body to bat the balls around on hover!
+        const cursorBody = Matter.Bodies.circle(0, 0, ballRadius * 1.5, {
+            isStatic: true,
+            render: { visible: false }
+        });
+        Matter.World.add(world, cursorBody);
+
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!sceneRef.current) return;
+            const rect = sceneRef.current.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Move the invisible cursor body to follow the mouse.
+            // Because it is physical, dragging it through the balls will bat them away instantly!
+            Matter.Body.setPosition(cursorBody, { x, y });
+        };
+        
+        // Listen to mouse move on the container
+        sceneRef.current.addEventListener('mousemove', handleMouseMove);
+
+        // Still keep mouse control for clicking/grabbing
+        const mouse = Matter.Mouse.create(sceneRef.current);
+        mouse.element.removeEventListener("mousewheel", mouse.mousewheel as EventListener);
+        mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel as EventListener);
+
+        const mouseConstraint = Matter.MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: { visible: false }
+            }
+        });
+        Matter.World.add(world, mouseConstraint);
+
+        // Run the engine
+        const runner = Matter.Runner.create();
+        Matter.Runner.run(runner, engine);
+
+        // Sync DOM
+        Matter.Events.on(engine, 'afterUpdate', () => {
+            const newPositions = bodies.map(b => ({
+                id: b.label,
+                x: b.position.x,
+                y: b.position.y,
+                angle: b.angle
+            }));
+            setPositions(newPositions);
+        });
+
+        return () => {
+            Matter.Runner.stop(runner);
+            Matter.Engine.clear(engine);
+            Matter.World.clear(world, false);
+            if (sceneRef.current) {
+                sceneRef.current.removeEventListener('mousemove', handleMouseMove);
+            }
+        };
+    }, []);
+
+    const ballRadius = isMobile ? 35 : 45;
 
     return (
-        <div className="orbit-system">
-            <div className="orbit-center" style={{ pointerEvents: "none", zIndex: 100 }}>XR</div>
-            <motion.div 
-                className="orbit-track" 
-                style={{ rotate: rotation, cursor: isDragging ? "grabbing" : "grab" }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0}
-                onDragStart={() => { setIsDragging(true); bonusVelocity.set(0); }}
-                onDragEnd={(e, info) => { setIsDragging(false); bonusVelocity.set(info.velocity.x * 0.05); }}
-                onDrag={(e, info) => { rotation.set(rotation.get() + info.delta.x * 0.4); }}
+        <section id="technologies" className="physics-section">
+            <div style={{ textAlign: "center", zIndex: 10, marginBottom: "3rem", pointerEvents: "none", padding: "0 1rem" }}>
+                <h2 className="section-main-title" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 900, margin: 0, letterSpacing: "-0.01em" }}>
+                    CORE <span className="accent-gradient-text">TECHNOLOGIES</span>
+                </h2>
+                <p style={{ color: "var(--secondary)", marginTop: "1rem", letterSpacing: "0.2em", textTransform: "uppercase", fontSize: "0.8rem" }}>
+                    Interactive Physics Sandbox
+                </p>
+            </div>
+
+            <div 
+                className="physics-container"
+                ref={sceneRef}
             >
-                {techItems.map((tech, i) => (
-                    <OrbitItem key={tech.label} tech={tech} angle={(i / techItems.length) * 360} rotation={rotation} />
-                ))}
-            </motion.div>
-        </div>
+                {positions.map(pos => {
+                    const tech = CORE_TECH_DATA.find(t => t.id === pos.id);
+                    if (!tech) return null;
+                    
+                    return (
+                        <div 
+                            key={pos.id}
+                            className="physics-ball"
+                            style={{
+                                width: ballRadius * 2,
+                                height: ballRadius * 2,
+                                transform: `translate(${pos.x - ballRadius}px, ${pos.y - ballRadius}px) rotate(${pos.angle}rad)`
+                            }}
+                        >
+                            <span className="physics-ball-text" style={{ transform: `rotate(${-pos.angle}rad)` }}>
+                                {tech.name}
+                            </span>
+                        </div>
+                    );
+                })}
+            </div>
+        </section>
     );
 };
 
@@ -115,83 +273,227 @@ const NAV_LINKS = ["Home", "Projects", "Skills", "Contact"];
 
 
 
-const CarouselCard = ({ project }: { project: Project }) => {
+const AccordionProjectCard = ({ project, index, expandedId, setExpandedId }: any) => {
+    const isOpen = expandedId === project.id;
+    
+    const updateOrigin = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const y = e.clientY - rect.top;
+        const origin = y < rect.height / 2 ? 'top' : 'bottom';
+        const fillEl = e.currentTarget.querySelector('.acc-hover-fill') as HTMLElement;
+        if (fillEl) {
+            fillEl.style.transformOrigin = origin;
+        }
+    };
+
     return (
-        <motion.div className="carousel-project-card" whileHover={{ scale: 1.02 }} transition={{ duration: 0.4 }}>
-            <div className="carousel-card-inner">
-                <div className="carousel-video-bg">
-                    <video src={project.video} autoPlay muted loop playsInline preload="metadata" />
-                    <div className="carousel-overlay" />
-                </div>
-                <div className="carousel-project-id" style={{ color: "var(--accent)" }}>{project.id}</div>
-                <div className="carousel-content">
-                    <h3 className="carousel-title">{project.title}</h3>
-                    <p className="carousel-desc">{project.desc}</p>
-                    <div className="carousel-actions">
-                        <a href="https://github.com/Avrsxvr" target="_blank" rel="noopener noreferrer" className="carousel-btn-main">
-                            Explore <IconGithub />
-                        </a>
+        <div className={`acc-project-wrapper ${isOpen ? 'open' : ''}`}>
+            <div 
+                className="acc-project-bar" 
+                onClick={() => setExpandedId(isOpen ? null : project.id)}
+                onMouseEnter={updateOrigin}
+                onMouseLeave={updateOrigin}
+            >
+                <div className="acc-hover-fill" />
+                
+                <div className="acc-bar-content">
+                    <div className="acc-id">{project.id}</div>
+                    <div className="acc-title-wrap">
+                        <h2 className="acc-title">{project.title}</h2>
+                        <span className="acc-category">{project.color ? "Spatial Computing" : "XR Development"}</span>
+                    </div>
+                    <div className="acc-icon">
+                        {isOpen ? <Minus size={20} /> : <Plus size={20} />}
                     </div>
                 </div>
-                <div className="carousel-top-border" />
             </div>
-        </motion.div>
+            
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div 
+                        className="acc-details-container"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                        <div className="acc-details-inner">
+                            <div className="acc-video-col">
+                                <video src={project.video} autoPlay muted loop playsInline preload="metadata" />
+                            </div>
+                            <div className="acc-info-col">
+                                <p className="acc-desc">{project.desc}</p>
+                                <a href="https://github.com/Avrsxvr" target="_blank" rel="noopener noreferrer" className="acc-btn">
+                                    Explore Project <ArrowRight size={16} style={{marginLeft: "0.5rem"}}/>
+                                </a>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
     );
 };
 
 const EXPERTISE_DATA = [
     {
+        id: "xr",
+        num: "01",
         category: "XR Development",
-        color: "var(--accent)",
+        summary: "Building immersive spatial experiences, physics-based VR interactions, and markerless AR applications.",
         skills: [
-            { title: "AR Applications (Unity)", desc: "Developing markerless AR applications with accurate object placement and interactive user experiences." },
-            { title: "VR Interaction Systems", desc: "Building immersive VR systems with core mechanics such as object manipulation, physics-based interactions, and locomotion." },
-            { title: "XR Interaction Design", desc: "Designing intuitive interaction flows that enhance usability and engagement within immersive environments." }
+            {
+                title: "AR Applications (Unity)",
+                desc: "Developing markerless AR applications with accurate object placement, environmental tracking, and interactive user flows.",
+                tags: ["UNITY", "ARCORE", "ARKIT", "C#"],
+                deliverable: "Markerless AR & Tracking"
+            },
+            {
+                title: "VR Interaction Systems",
+                desc: "Building immersive VR mechanics including 6DoF hand manipulation, custom physics-based interactions, and comfortable locomotion.",
+                tags: ["OPENXR", "VR PHYSICS", "C#", "UNITY"],
+                deliverable: "6DoF Physics Systems"
+            },
+            {
+                title: "XR Interaction Design",
+                desc: "Designing intuitive spatial UI and interaction flows tailored specifically for 3D spatial computing environments.",
+                tags: ["SPATIAL UI", "UX DESIGN", "PROTOTYPING"],
+                deliverable: "Spatial UI & Design"
+            }
         ]
     },
     {
+        id: "web",
+        num: "02",
         category: "Interactive & Web",
-        color: "var(--accent)",
+        summary: "Creating high-performance web 3D applications, WebAR configurators, and modern frontend prototypes.",
         skills: [
-            { title: "WebAR Experiences", desc: "Creating browser-based AR experiences that enable real-time placement and interaction with 3D content." },
-            { title: "Interactive Configurators", desc: "Developing AR-driven configurators allowing users to customize products through dynamic color and material changes." },
-            { title: "Frontend Prototyping", desc: "Rapidly building functional web interfaces and prototypes to validate ideas and interaction flows." }
+            {
+                title: "WebAR Experiences",
+                desc: "Browser-based augmented reality experiences enabling real-time 3D model placement and interaction without app installs.",
+                tags: ["THREE.JS", "WEBGL", "WEBAR", "JS/TS"],
+                deliverable: "Zero-Install WebAR"
+            },
+            {
+                title: "Interactive 3D Configurators",
+                desc: "Developing real-time product configurators allowing users to customize materials, colors, and features dynamically.",
+                tags: ["THREE.JS", "REACT", "SHADERS", "GLTF"],
+                deliverable: "Real-Time 3D Engine"
+            },
+            {
+                title: "Frontend Prototyping",
+                desc: "Rapidly building responsive, motion-rich web interfaces and functional prototypes to validate product interaction concepts.",
+                tags: ["NEXT.JS", "REACT", "FRAMER MOTION", "CSS3"],
+                deliverable: "High-Fidelity Web Apps"
+            }
         ]
     },
     {
+        id: "ai",
+        num: "03",
         category: "Intelligent Systems",
-        color: "var(--accent)",
+        summary: "Integrating computer vision algorithms, AI automation tools, and adaptive intelligence into XR workflows.",
         skills: [
-            { title: "Computer Vision", desc: "Implementing vision-based features such as detection and tracking to enable context-aware interactions." },
-            { title: "Automation Tools", desc: "Developing lightweight AI-driven tools to streamline repetitive tasks and workflows." },
-            { title: "AI in XR (Exploraion)", desc: "Exploring the integration of AI within XR to create more adaptive and responsive user experiences." }
+            {
+                title: "Computer Vision",
+                desc: "Implementing vision-based object detection, gesture tracking, and spatial mapping features to enable context-aware interactions.",
+                tags: ["OPENCV", "PYTHON", "GESTURE TRACKING"],
+                deliverable: "Spatial Perception"
+            },
+            {
+                title: "Automation Tools",
+                desc: "Developing lightweight AI-driven automation tools and scripts to streamline repetitive technical workflows.",
+                tags: ["PYTHON", "AI APIS", "AUTOMATION"],
+                deliverable: "Workflow Efficiency"
+            },
+            {
+                title: "AI in XR Exploration",
+                desc: "Exploring modern generative AI integration inside XR to build dynamic, contextually adaptive spatial user interfaces.",
+                tags: ["GENAI", "SPATIAL AI", "PROTOTYPING"],
+                deliverable: "Adaptive Intelligent XR"
+            }
         ]
     }
 ];
 
-const ExpertiseCard = ({ group }: { group: typeof EXPERTISE_DATA[0] }) => (
-    <motion.div 
-        className="expertise-group-card"
-        whileHover={{ x: 5 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-    >
-        <div className="expertise-header-wrap">
-            <h3 className="expertise-num-tag">{group.category}</h3>
+const CapabilitiesShowcase = () => {
+    const [activeTab, setActiveTab] = useState(0);
+    const activeGroup = EXPERTISE_DATA[activeTab];
+
+    return (
+        <div className="showcase-container">
+            <div className="showcase-tabs">
+                {EXPERTISE_DATA.map((group, idx) => {
+                    const isActive = activeTab === idx;
+                    return (
+                        <button 
+                            key={group.id} 
+                            className={`showcase-tab-btn ${isActive ? 'active' : ''}`}
+                            onClick={() => setActiveTab(idx)}
+                        >
+                            <span className="tab-num">{group.num}</span>
+                            <span className="tab-title">{group.category}</span>
+                            {isActive && (
+                                <motion.div 
+                                    className="tab-active-indicator" 
+                                    layoutId="activeTabIndicator"
+                                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                />
+                            )}
+                        </button>
+                    );
+                })}
+            </div>
+
+            <AnimatePresence mode="wait">
+                <motion.div 
+                    key={activeGroup.id}
+                    className="showcase-stage"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.4 }}
+                >
+                    <div className="stage-header">
+                        <div className="stage-header-meta">
+                            <span className="stage-num">{activeGroup.num}</span>
+                            <h3 className="stage-title">{activeGroup.category}</h3>
+                        </div>
+                        <p className="stage-summary">{activeGroup.summary}</p>
+                    </div>
+
+                    <div className="stage-cards-grid">
+                        {activeGroup.skills.map((skill, idx) => (
+                            <motion.div 
+                                key={idx}
+                                className="stage-feature-card"
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                            >
+                                <div className="card-top">
+                                    <span className="deliverable-badge">{skill.deliverable}</span>
+                                </div>
+                                <h4 className="card-skill-title">{skill.title}</h4>
+                                <p className="card-skill-desc">{skill.desc}</p>
+                                
+                                <div className="card-tags-list">
+                                    {skill.tags.map((tag, tIdx) => (
+                                        <span key={tIdx} className="tech-tag">{tag}</span>
+                                    ))}
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+            </AnimatePresence>
         </div>
-        <div className="expertise-list">
-            {group.skills.map((skill, idx) => (
-                <div key={idx} className="expertise-item">
-                    <h4>{skill.title}</h4>
-                    <p>{skill.desc}</p>
-                </div>
-            ))}
-        </div>
-        <div className="expertise-corner-accent" />
-    </motion.div>
-);
+    );
+};
 
 export default function Home() {
     const [isClient, setIsClient] = useState(false);
+    const [expandedId, setExpandedId] = useState<string | null>(null);
     const heroRef = useRef<HTMLElement>(null);
     const footerRef = useRef<HTMLElement>(null);
     const mouseX = useMotionValue(0);
@@ -204,29 +506,41 @@ export default function Home() {
         mouseY.set(e.clientY - rect.top);
     };
 
-    useEffect(() => { setIsClient(true); }, []);
+    useEffect(() => { 
+        setIsClient(true);
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            touchMultiplier: 1.5,
+        });
+
+        function raf(time: number) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+
+        return () => {
+            lenis.destroy();
+        };
+    }, []);
 
     const { scrollYProgress: heroProgress } = useScroll({
-        target: isClient ? (heroRef as any) : undefined,
+        target: heroRef,
         offset: ["start start", "end start"]
     });
     
     const smoothHero = useSpring(heroProgress, { stiffness: 180, damping: 35, mass: 0.15 });
-    const scaleHero = useTransform(smoothHero, [0, 0.16], [1, 12], { clamp: true });
-    const heroOpacity = useTransform(smoothHero, [0, 0.16], [1, 0], { clamp: true });
-    const aboutOpacity = useTransform(smoothHero, [0.15, 0.22, 0.35, 0.45], [0, 1, 1, 0], { clamp: true });
-    const aboutScale = useTransform(smoothHero, [0.15, 0.45], [0.95, 1.05], { clamp: true });
-    const aboutY = useTransform(smoothHero, [0.15, 0.45], [50, -20], { clamp: true });
-    const bgColor = useTransform(smoothHero, [0.35, 0.5], ["rgba(0,0,0,1)", "rgba(0,0,0,0)"], { clamp: true });
-    const textOpacity = useTransform(smoothHero, [0, 0.05, 0.45, 0.55], [1, 0.2, 0.2, 1], { clamp: true });
-    const panProgress = useTransform(smoothHero, [0.45, 0.78], [0, 1], { clamp: true });
-    const carouselX = useTransform(panProgress, (v) => {
-        // Automatically translates exactly to the inner edge of the padded window (90vw available)
-        return `calc(${v * -100}% + ${v * 90}vw)`;
-    });
+    const scaleHero = useTransform(smoothHero, [0, 0.3], [1, 12], { clamp: true });
+    const heroOpacity = useTransform(smoothHero, [0, 0.3], [1, 0], { clamp: true });
+    const aboutOpacity = useTransform(smoothHero, [0.25, 0.4, 0.7, 0.9], [0, 1, 1, 0], { clamp: true });
+    const aboutScale = useTransform(smoothHero, [0.25, 0.9], [0.95, 1.05], { clamp: true });
+    const aboutY = useTransform(smoothHero, [0.25, 0.9], [50, -20], { clamp: true });
+    const textOpacity = useTransform(smoothHero, [0, 0.1, 0.8, 0.9], [1, 0.2, 0.2, 1], { clamp: true });
     const navPointerEvents = useTransform(textOpacity, (v) => v > 0.1 ? "auto" : "none");
  
-    if (!isClient) return <div style={{ background: "#000", minHeight: "100dvh" }} />;
+
  
     return (
         <main style={{ backgroundColor: "#000" }}>
@@ -242,43 +556,10 @@ export default function Home() {
                 <a href="mailto:vanshsg12@gmail.com"><IconMail /></a>
             </motion.aside>
  
-            <section ref={heroRef} id="home" style={{ height: "500dvh", position: "relative" }}>
-                <div id="projects" style={{ position: "absolute", top: "125dvh" }} />
-                
+            <section ref={heroRef} id="home" style={{ height: "250dvh", position: "relative" }}>
                 <div style={{ position: "sticky", top: 0, height: "100dvh", overflow: "hidden", backgroundColor: "#000" }}>
-                    {/* LAYER 1: PROJECTS TRACK */}
-                    <div style={{ position: "absolute", inset: 0, zIndex: 10, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                        <motion.div 
-                            className="carousel-section-header" 
-                            style={{ marginBottom: "2rem" }}
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1.1, ease: "easeOut" }}
-                        >
-                            <h2 className="section-main-title">Selected <span style={{ color: "var(--accent)" }}>Projects</span></h2>
-                        </motion.div>
-                        <div className="carousel-view-port">
-                            <motion.div className="carousel-track" style={{ x: carouselX }}>
-                                {PROJECTS_DATA.map((project, i) => (
-                                    <motion.div 
-                                        key={i}
-                                        initial={{ opacity: 0, y: 50 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.8, delay: i * 0.05 }}
-                                        viewport={{ margin: "-50px" }}
-                                    >
-                                        <CarouselCard project={project} />
-                                    </motion.div>
-                                ))}
-                            </motion.div>
-                        </div>
-                        <div className="carousel-hint" style={{ marginTop: "2rem" }}>
-                            <ArrowLeft size={16} /> Keep scrolling down to explore <ArrowRight size={16} />
-                        </div>
-                    </div>
- 
-                    {/* LAYER 2: ZOOMING ELEMENTS */}
-                    <motion.div style={{ position: "absolute", inset: 0, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: bgColor as any, pointerEvents: "none", perspective: "1000px" }}>
+                    {/* LAYER 1: ZOOMING ELEMENTS & ABOUT */}
+                    <motion.div style={{ position: "absolute", inset: 0, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#000", pointerEvents: "none", perspective: "1000px" }}>
                         <motion.div className="z-container hero-z" style={{ scale: scaleHero, opacity: heroOpacity }}>
                             <div className="hero-grid" aria-hidden="true" />
                             <div className="hero-glow" aria-hidden="true" />
@@ -290,7 +571,7 @@ export default function Home() {
                             </div>
                             <div className="hero-profile-img-wrap">
                                 <div className="hero-profile-img-ring" />
-                                <Image src="/Gemini_Generated_Image_7577lg7577lg7577-Photoroom.png" alt="Sujal Gupta" width={220} height={220} className="hero-profile-img" priority />
+                                <Image src="/Gemini_Generated_Image_7577lg7577lg7577-Photoroom.png" alt="Sujal Gupta" width={1000} height={1000} className="hero-profile-img" priority />
                             </div>
                         </motion.div>
  
@@ -307,66 +588,106 @@ export default function Home() {
                                 margin: "0 auto"
                             }}
                         >
-                            <div className="about-container">
-                                <div className="about-left">
-                                    <div className="about-bg-graphic" aria-hidden="true" />
-                                    <div style={{ width: "40px", height: "2px", background: "#fff", marginBottom: "2rem" }} />
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 40 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 1.1, ease: "easeOut" }}
-                                    >
-                                        <h1 className="know-me-title">KNOW <span>ME</span></h1>
-                                    </motion.div>
-                                    <motion.h2 
-                                        className="about-sub"
-                                        initial={{ opacity: 0, y: 30 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 1.1, delay: 0.2, ease: "easeOut" }}
-                                    >
-                                        XR Developer
-                                    </motion.h2>
-                                    <div className="about-loc">
-                                        <MapPin size={14} /> Based in Chennai
+                            <div className="bento-about-container">
+                                {/* Bento Tile 1: Hero Title */}
+                                <motion.div 
+                                    className="bento-tile tile-title"
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, ease: "easeOut" }}
+                                >
+                                    <div className="bento-title-content">
+                                        <div className="bento-badge">XR DEVELOPER</div>
+                                        <h1 className="bento-huge-title">KNOW<br/><span className="bento-gradient-text">ME</span></h1>
+                                        <p className="bento-tagline">Building XR experiences that feel real.</p>
                                     </div>
-                                    <p className="about-tagline">
-                                        Building XR experiences that <span>feel real.</span>
-                                    </p>
-                                </div>
- 
-                                <div className="about-right">
-                                    <p className="about-main-text">
-                                        I’m an <span className="accent">XR developer</span> building interactive <strong>AR/VR experiences</strong> using Unity and modern spatial technologies. I focus on creating practical, usable products that go beyond experimentation.
-                                        <br/><br/>
-                                        Alongside my personal projects, I collaborate on select <strong>freelance XR work</strong>, working on real-world interactive solutions. Recently, I’ve been exploring the intersection of <span className="accent">spatial computing</span> and <strong>AI</strong> to build more intuitive and adaptive experiences.
-                                    </p>
- 
-                                    <div className="about-currently-section">
-                                        <span className="about-section-label">Currently</span>
-                                        <div className="status-grid">
-                                            {[
-                                                { icon: Code, label: "Building", desc: "XR interaction systems" },
-                                                { icon: Compass, label: "Exploring", desc: "AI in spatial environments" },
-                                                { icon: Briefcase, label: "Working on", desc: "Real-world AR applications" }
-                                            ].map((item, idx) => (
-                                                <motion.div 
-                                                    key={idx} 
-                                                    className="status-card"
-                                                    initial={{ opacity: 0, y: 20 }}
-                                                    whileInView={{ opacity: 1, y: 0 }}
-                                                    transition={{ duration: 0.6, delay: 0.1 + idx * 0.1 }}
-                                                >
-                                                    <item.icon size={18} color="var(--accent)" />
-                                                    <div className="status-label">{item.label}</div>
-                                                    <div className="status-desc">{item.desc}</div>
-                                                </motion.div>
-                                            ))}
+                                </motion.div>
+
+                                {/* Bento Tile 2: Location Map */}
+                                <motion.div 
+                                    className="bento-tile tile-location"
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+                                >
+                                    <div className="bento-map-bg">
+                                        <div className="map-grid-lines" />
+                                        <div className="map-pulse-dot-wrap">
+                                            <div className="map-pulse-ring" />
+                                            <div className="map-pulse-dot" />
                                         </div>
                                     </div>
-                                </div>
+                                    <div className="bento-loc-text">
+                                        <MapPin size={16} color="var(--accent)" /> Based in Chennai
+                                    </div>
+                                </motion.div>
+
+                                {/* Bento Tile 3: Bio Text */}
+                                <motion.div 
+                                    className="bento-tile tile-bio"
+                                    initial={{ opacity: 0, x: 30 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                                >
+                                    <p className="bento-bio-main">
+                                        I’m an <span className="accent">XR developer</span> building interactive AR/VR experiences using Unity and modern spatial technologies. I focus on creating practical, usable products that go beyond experimentation.
+                                    </p>
+                                    <p className="bento-bio-sub">
+                                        Alongside my personal projects, I collaborate on select freelance XR work. Recently, I’ve been exploring the intersection of spatial computing and AI to build more intuitive and adaptive experiences.
+                                    </p>
+                                </motion.div>
+
+                                {/* Bento Tiles 4, 5, 6: Currently */}
+                                {[
+                                    { icon: Code, label: "Building", desc: "XR interaction systems", delay: 0.3 },
+                                    { icon: Compass, label: "Exploring", desc: "AI in spatial environments", delay: 0.4 },
+                                    { icon: Briefcase, label: "Working on", desc: "Real-world AR applications", delay: 0.5 }
+                                ].map((item, idx) => (
+                                    <motion.div 
+                                        key={idx} 
+                                        className={`bento-tile tile-status tile-status-${idx}`}
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.6, delay: item.delay, ease: "easeOut" }}
+                                    >
+                                        <div className="status-icon-wrap">
+                                            <item.icon size={22} className="status-icon" />
+                                        </div>
+                                        <div className="status-text-wrap">
+                                            <div className="bento-status-label">{item.label}</div>
+                                            <div className="bento-status-desc">{item.desc}</div>
+                                        </div>
+                                    </motion.div>
+                                ))}
                             </div>
                         </motion.div>
                     </motion.div>
+                </div>
+            </section>
+ 
+            <section id="projects" className="acc-projects-section">
+                <div className="acc-section-header">
+                    <motion.h2 
+                        className="section-main-title"
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1.1, ease: "easeOut" }}
+                        viewport={{ once: true }}
+                    >
+                        Selected <span className="accent-gradient-text">Works</span>
+                    </motion.h2>
+                </div>
+                
+                <div className="acc-projects-container">
+                    {PROJECTS_DATA.map((project, i) => (
+                        <AccordionProjectCard 
+                            key={project.id} 
+                            project={project} 
+                            index={i} 
+                            expandedId={expandedId}
+                            setExpandedId={setExpandedId}
+                        />
+                    ))}
                 </div>
             </section>
  
@@ -377,53 +698,12 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.1, ease: "easeOut" }}
                 >
-                    <h2 className="section-main-title">What I <span style={{ color: "var(--accent)" }}>Build</span></h2>
+                    <h2 className="section-main-title">What I <span className="accent-gradient-text">Build</span></h2>
                 </motion.div>
-                <div className="expertise-grid">
-                    {EXPERTISE_DATA.map((group, i) => (
-                        <motion.div 
-                            key={i}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1.1, delay: i * 0.15, ease: "easeOut" }}
-                        >
-                            <ExpertiseCard group={group} />
-                        </motion.div>
-                    ))}
-                </div>
+                <CapabilitiesShowcase />
             </section>
  
-            <section id="technologies" className="content-section" style={{ alignItems: "center", textAlign: "center", display: "flex", flexDirection: "column", padding: "10rem 5vw 8rem 5vw", position: "relative" }}>
-                <motion.div 
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1.1, ease: "easeOut" }}
-                    style={{ marginBottom: "5rem", zIndex: 10 }}
-                >
-                    <h2 
-                        className="section-main-title" 
-                        style={{ 
-                            maxWidth: "1200px", 
-                            margin: "0 auto", 
-                            fontSize: "clamp(2.5rem, 6vw, 4.5rem)", 
-                            fontWeight: 900,
-                            letterSpacing: "-0.01em",
-                            lineHeight: 1
-                        }}
-                    >
-                        CORE <span style={{ color: "var(--accent)" }}>TECHNOLOGIES</span>
-                    </h2>
-                </motion.div>
-                
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    style={{ width: "100%", display: "flex", justifyContent: "center" }}
-                >
-                    <OrbitalTechStack />
-                </motion.div>
-            </section>
+            <MatterPhysicsEngine />
  
             <section className="resume-strip-section">
                 <motion.div 

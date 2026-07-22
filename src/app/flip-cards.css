@@ -1,0 +1,124 @@
+/* Flipping Card Stack Styles */
+
+.flip-card-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  perspective: 2500px;
+  width: 100%;
+  max-width: 400px;
+  height: 600px; /* Allows room for fanning */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* Let clicks pass through empty space */
+}
+
+.flip-card-wrapper {
+  position: absolute;
+  width: 320px;
+  height: 90px;
+  transform-style: preserve-3d;
+  pointer-events: auto;
+}
+
+@media (max-width: 480px) {
+  .flip-card-wrapper {
+    width: 280px;
+    height: 80px;
+  }
+}
+
+.flip-card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+/* BACK of the card (visible when stacked, before flipping) */
+.flip-card-back {
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transform: rotateX(180deg);
+  justify-content: center;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 198, 255, 0.03) 0px,
+    rgba(0, 198, 255, 0.03) 2px,
+    transparent 2px,
+    transparent 8px
+  );
+}
+
+.card-back-logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: rgba(0, 198, 255, 0.15);
+  letter-spacing: 0.1em;
+}
+
+/* FRONT of the card (visible after flipping) */
+.flip-card-front {
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 198, 255, 0.3);
+  justify-content: space-between;
+  box-shadow: 0 10px 30px rgba(0, 198, 255, 0.1), inset 0 0 20px rgba(0, 198, 255, 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: rotateX(0deg);
+}
+
+.flip-card-front:hover {
+  border-color: rgba(0, 198, 255, 0.8);
+  box-shadow: 0 10px 40px rgba(0, 198, 255, 0.25), inset 0 0 20px rgba(0, 198, 255, 0.1);
+}
+
+.fc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.fc-title {
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.fc-category {
+  font-size: 0.7rem;
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+}
+
+.fc-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 198, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.fc-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent);
+}

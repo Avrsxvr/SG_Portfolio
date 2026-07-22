@@ -1,0 +1,75 @@
+/* Physics Bubble Engine CSS */
+
+.physics-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.physics-container {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 198, 255, 0.5);
+  box-shadow: 
+    0 0 60px rgba(0, 198, 255, 0.3),
+    inset 0 0 60px rgba(0, 198, 255, 0.3),
+    inset -20px -20px 50px rgba(0, 0, 0, 0.5);
+  touch-action: none; /* Required for dragging without scrolling the page */
+  overflow: hidden; /* Just in case */
+}
+
+@media (max-width: 768px) {
+  .physics-container {
+    width: 360px;
+    height: 360px;
+  }
+}
+
+.physics-ball {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(0, 198, 255, 0.6) 40%, rgba(0, 114, 255, 1) 100%);
+  box-shadow: 
+    inset -10px -10px 20px rgba(0, 0, 0, 0.5), 
+    0 10px 20px rgba(0, 198, 255, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  transform-origin: center center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.physics-ball:active {
+  cursor: grabbing;
+}
+
+.physics-ball-text {
+  font-family: var(--font-main);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #000;
+  text-align: center;
+  line-height: 1.1;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .physics-ball-text {
+    font-size: 0.7rem;
+  }
+}
