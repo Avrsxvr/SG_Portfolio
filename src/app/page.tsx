@@ -175,8 +175,8 @@ const MatterPhysicsEngine = () => {
 
         // Still keep mouse control for clicking/grabbing
         const mouse = Matter.Mouse.create(sceneRef.current);
-        mouse.element.removeEventListener("mousewheel", mouse.mousewheel as EventListener);
-        mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel as EventListener);
+        mouse.element.removeEventListener("mousewheel", (mouse as any).mousewheel as EventListener);
+        mouse.element.removeEventListener("DOMMouseScroll", (mouse as any).mousewheel as EventListener);
 
         const mouseConstraint = Matter.MouseConstraint.create(engine, {
             mouse: mouse,
