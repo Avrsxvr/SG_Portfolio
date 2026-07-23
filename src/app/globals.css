@@ -1055,15 +1055,15 @@ a {
 /* ── Hero Profile Image ── */
 .hero-profile-img-wrap {
   position: absolute;
-  bottom: -4%;
+  bottom: 3%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 6;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 630px;
-  height: 630px;
+  width: 610px;
+  height: 610px;
   animation: heroImgFloat 4s ease-in-out infinite;
 }
 
@@ -1080,11 +1080,13 @@ a {
   position: relative;
   z-index: 1;
   object-fit: contain;
-  width: 630px !important;
-  height: 630px !important;
+  width: 610px !important;
+  height: 610px !important;
   border: none;
   background: transparent;
   box-shadow: none;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
 }
 
 /* Mobile — keep original 300px, no layout changes */
@@ -2747,77 +2749,20 @@ a {
 }
 
 
-/* --- RESTORE DESKTOP HERO AVATAR POSITION & SIZE MATCHING DEPLOYED SITE --- */
+/* --- DESKTOP HERO AVATAR POSITION & SIZE --- */
 @media (min-width: 769px) {
   .hero-profile-img-wrap {
-    width: 780px !important;
-    height: 780px !important;
-    bottom: -2% !important;
+    width: 610px !important;
+    height: 610px !important;
+    bottom: 3% !important;
   }
 
   .hero-profile-img {
-    width: 780px !important;
-    height: 780px !important;
+    width: 610px !important;
+    height: 610px !important;
   }
 }
 
-
-/* --- INCREASE HERO AVATAR SIZE BY 10% & ENSURE CRISP QUALITY --- */
-@media (min-width: 769px) {
-  .hero-profile-img-wrap {
-    width: 860px !important;
-    height: 860px !important;
-    bottom: -3% !important;
-  }
-
-  .hero-profile-img {
-    width: 860px !important;
-    height: 860px !important;
-    image-rendering: -webkit-optimize-contrast;
-  }
-}
-
-
-/* --- EXACT MATCH TO TARGET DEPLOYED SITE (720px, bottom: -5%) --- */
-@media (min-width: 769px) {
-  .hero-profile-img-wrap {
-    width: 720px !important;
-    height: 720px !important;
-    bottom: -5% !important;
-  }
-
-  .hero-profile-img {
-    width: 720px !important;
-    height: 720px !important;
-  }
-}
-
-
-/* --- SHIFT HERO AVATAR UPWARD TO OVERLAP SUJAL GUPTA EXACTLY LIKE IMAGE 1 --- */
-@media (min-width: 769px) {
-  .hero-profile-img-wrap {
-    width: 760px !important;
-    height: 760px !important;
-    bottom: 4% !important;
-  }
-
-  .hero-profile-img {
-    width: 760px !important;
-    height: 760px !important;
-  }
-}
-
-
-/* --- INCREASE HERO TEXT SIZE BY 10% AND ADJUST AVATAR POSITION --- */
-@media (min-width: 769px) {
-  .hero-name-first, .hero-name-last {
-    font-size: clamp(3.3rem, 11vw, 11rem) !important;
-  }
-
-  .hero-profile-img-wrap {
-    bottom: 1% !important;
-  }
-}
 
 
 
