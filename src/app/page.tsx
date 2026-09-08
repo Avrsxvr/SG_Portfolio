@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate, useAnimationFrame, MotionValue, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft, MapPin, Code, Compass, Briefcase, FileText, Download, Plus, Minus } from "lucide-react";
+import { ArrowRight, ArrowLeft, MapPin, Code, Compass, Briefcase, FileText, Download, Plus, Minus, VolumeX, Volume2 } from "lucide-react";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import Matter from "matter-js";
@@ -268,7 +268,7 @@ const PROJECTS_DATA: Project[] = [
     { title: "POPSTRIKE", desc: "Developed a hand tracking VR game for fine motor control using gesture recognition, finger path tracing, and sequenced tasks targeting precision, coordination, and cognitive flexibility.", video: "/videos/popstrike.mp4", color: "#F07400", id: "01", category: "Virtual Reality", link: "https://github.com/Avrsxvr/PopStrike" },
     { title: "ARCROLL", desc: "Built a physics based throwing game where players throw basketballs, frisbees, and bowling balls at targets to destroy them while training shoulder rotation, elbow extension, and wrist movement.", video: "/videos/ArcRoll%20Demo%20Video.mp4", color: "#8800ff", id: "02", category: "Virtual Reality", link: "https://github.com/Avrsxvr/ArcRoll" },
     { title: "SANSKAR (AR HERITAGE)", desc: "Built a mobile AR app for Android and iOS that recognizes physical museum exhibits and displays three-dimensional content with historical narratives when scanned.", video: "/videos/ar_heritage.mp4", color: "#00d4ff", id: "03", category: "Augmented Reality", link: "https://github.com/Avrsxvr" },
-    { title: "SMART INTERIORS", desc: "Visualize furniture with accurate scaling and positioning.\nCustomize textures for a personalized experience.", video: "/videos/BV%20Video.mp4", color: "#00ff88", id: "04", category: "Augmented Reality", link: "https://github.com/Avrsxvr" }
+    { title: "BEACH VOLLEY", desc: "Built a volleyball game where players engage in rally exchanges with a virtual opponent to develop coordination, timing, and sustained arm and shoulder control. Built a JSON-based system that accepts cloud-driven game configurations to update settings without redeploying.", video: "/videos/BV%20Video.mp4", color: "#00ff88", id: "04", category: "Virtual Reality", link: "https://github.com/vanshg1214/BR_GAME/tree/main/Assets/Games/VolleyBall" }
 ];
 
 const NAV_LINKS = ["Home", "Projects", "Skills", "Contact"];
@@ -277,6 +277,7 @@ const NAV_LINKS = ["Home", "Projects", "Skills", "Contact"];
 
 const AccordionProjectCard = ({ project, index, expandedId, setExpandedId }: any) => {
     const isOpen = expandedId === project.id;
+    const [isMuted, setIsMuted] = useState(true);
     
     const updateOrigin = (e: React.MouseEvent<HTMLDivElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -320,8 +321,37 @@ const AccordionProjectCard = ({ project, index, expandedId, setExpandedId }: any
                         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                     >
                         <div className="acc-details-inner">
-                            <div className="acc-video-col">
-                                <video src={project.video} autoPlay muted loop playsInline preload="metadata" />
+                            <div className="acc-video-col" style={{ position: "relative" }}>
+                                <video src={project.video} autoPlay muted={isMuted} loop playsInline preload="metadata" />
+                                <button 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsMuted(!isMuted);
+                                    }}
+                                    style={{
+                                        position: "absolute",
+                                        bottom: "1rem",
+                                        right: "1rem",
+                                        background: "rgba(0,0,0,0.6)",
+                                        border: "1px solid rgba(255,255,255,0.2)",
+                                        color: "white",
+                                        borderRadius: "50%",
+                                        width: "36px",
+                                        height: "36px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        cursor: "pointer",
+                                        backdropFilter: "blur(4px)",
+                                        zIndex: 10,
+                                        transition: "all 0.2s ease"
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(0,0,0,0.8)"}
+                                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(0,0,0,0.6)"}
+                                    aria-label="Toggle audio"
+                                >
+                                    {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                                </button>
                             </div>
                             <div className="acc-info-col">
                                 <p className="acc-desc">{project.desc}</p>
