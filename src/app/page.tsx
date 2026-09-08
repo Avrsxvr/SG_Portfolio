@@ -260,13 +260,15 @@ interface Project {
     video: string;
     color: string;
     id: string;
+    category: string;
+    link?: string;
 }
 
 const PROJECTS_DATA: Project[] = [
-    { title: "SPACESHIP VR", desc: "Immersive spaceship experience with physics-based interactions and dynamic cockpit controls for space exploration.", video: "/videos/space_vr.mp4", color: "#F07400", id: "01" },
-    { title: "VR INTERACTIVE GAME", desc: "Diverse VR gameplay featuring basketball, target shooting, and escape rooms with fluid mechanics.", video: "/videos/intro_vr.mp4", color: "#8800ff", id: "02" },
-    { title: "AR HERITAGE", desc: "Explore India’s cultural heritage interactively with immersive storytelling and 3D visualizations.", video: "/videos/ar_heritage.mp4", color: "#00d4ff", id: "03" },
-    { title: "SMART INTERIORS", desc: "Visualize furniture with accurate scaling and positioning.\nCustomize textures for a personalized experience.", video: "/videos/ar_furniture.mp4", color: "#00ff88", id: "04" }
+    { title: "POPSTRIKE", desc: "Developed a hand tracking VR game for fine motor control using gesture recognition, finger path tracing, and sequenced tasks targeting precision, coordination, and cognitive flexibility.", video: "/videos/popstrike.mp4", color: "#F07400", id: "01", category: "Virtual Reality", link: "https://github.com/Avrsxvr/PopStrike" },
+    { title: "ARCROLL", desc: "Built a physics based throwing game where players throw basketballs, frisbees, and bowling balls at targets to destroy them while training shoulder rotation, elbow extension, and wrist movement.", video: "/videos/ArcRoll%20Demo%20Video.mp4", color: "#8800ff", id: "02", category: "Virtual Reality", link: "https://github.com/Avrsxvr/ArcRoll" },
+    { title: "SANSKAR (AR HERITAGE)", desc: "Built a mobile AR app for Android and iOS that recognizes physical museum exhibits and displays three-dimensional content with historical narratives when scanned.", video: "/videos/ar_heritage.mp4", color: "#00d4ff", id: "03", category: "Augmented Reality", link: "https://github.com/Avrsxvr" },
+    { title: "SMART INTERIORS", desc: "Visualize furniture with accurate scaling and positioning.\nCustomize textures for a personalized experience.", video: "/videos/BV%20Video.mp4", color: "#00ff88", id: "04", category: "Augmented Reality", link: "https://github.com/Avrsxvr" }
 ];
 
 const NAV_LINKS = ["Home", "Projects", "Skills", "Contact"];
@@ -300,7 +302,7 @@ const AccordionProjectCard = ({ project, index, expandedId, setExpandedId }: any
                     <div className="acc-id">{project.id}</div>
                     <div className="acc-title-wrap">
                         <h2 className="acc-title">{project.title}</h2>
-                        <span className="acc-category">{project.color ? "Spatial Computing" : "XR Development"}</span>
+                        <span className="acc-category">{project.category}</span>
                     </div>
                     <div className="acc-icon">
                         {isOpen ? <Minus size={20} /> : <Plus size={20} />}
@@ -323,7 +325,7 @@ const AccordionProjectCard = ({ project, index, expandedId, setExpandedId }: any
                             </div>
                             <div className="acc-info-col">
                                 <p className="acc-desc">{project.desc}</p>
-                                <a href="https://github.com/Avrsxvr" target="_blank" rel="noopener noreferrer" className="acc-btn">
+                                <a href={project.link || "https://github.com/Avrsxvr"} target="_blank" rel="noopener noreferrer" className="acc-btn">
                                     Explore Project <ArrowRight size={16} style={{marginLeft: "0.5rem"}}/>
                                 </a>
                             </div>
