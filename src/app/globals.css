@@ -217,11 +217,6 @@ a {
     gap: 1rem;
     width: auto;
     padding: 0.7rem 1.5rem;
-    background: rgba(10, 10, 10, 0.4);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10rem;
     z-index: 1000;
   }
   
