@@ -2718,25 +2718,28 @@ a {
 
 
 /* --- RESTRICT FILL TO HOVER ONLY --- */
-.acc-project-wrapper.open .acc-project-bar:not(:hover) .acc-hover-fill {
-    transform: scaleY(0) !important;
-    box-shadow: none !important;
-}
+/* --- RESTRICT FILL TO HOVER ONLY (DESKTOP ONLY) --- */
+@media (hover: hover) {
+    .acc-project-wrapper.open .acc-project-bar:not(:hover) .acc-hover-fill {
+        transform: scaleY(0) !important;
+        box-shadow: none !important;
+    }
 
-.acc-project-wrapper.open .acc-project-bar:not(:hover) .acc-bar-content {
-    color: #fff !important; /* Reset to white */
-}
+    .acc-project-wrapper.open .acc-project-bar:not(:hover) .acc-bar-content {
+        color: #fff !important; /* Reset to white */
+    }
 
-.acc-project-wrapper.open .acc-project-bar:not(:hover) .acc-category {
-    color: var(--accent) !important; /* Reset to accent */
-}
+    .acc-project-wrapper.open .acc-project-bar:not(:hover) .acc-category {
+        color: var(--accent) !important; /* Reset to accent */
+    }
 
-.acc-project-wrapper.open .acc-project-bar:not(:hover) .acc-icon {
-    border-color: rgba(255, 255, 255, 0.2) !important; /* Reset to original border */
-}
+    .acc-project-wrapper.open .acc-project-bar:not(:hover) .acc-icon {
+        border-color: rgba(255, 255, 255, 0.2) !important; /* Reset to original border */
+    }
 
-.acc-project-wrapper.open .acc-project-bar:not(:hover) .acc-id {
-    opacity: 0.6 !important; /* Reset to original opacity */
+    .acc-project-wrapper.open .acc-project-bar:not(:hover) .acc-id {
+        opacity: 0.6 !important; /* Reset to original opacity */
+    }
 }
 
 
