@@ -4603,3 +4603,28 @@ html.lenis, html.lenis body {
         font-size: 0.95rem;
     }
 }
+
+/* --- FIX STICKY HOVER ON MOBILE --- */
+@media (hover: none) {
+    .acc-project-wrapper:not(.open) .acc-project-bar:hover .acc-hover-fill {
+        transform: scaleY(0) !important;
+        box-shadow: none !important;
+    }
+    
+    .acc-project-wrapper:not(.open) .acc-project-bar:hover .acc-bar-content {
+        color: #fff !important;
+    }
+    
+    .acc-project-wrapper:not(.open) .acc-project-bar:hover .acc-category {
+        color: var(--accent) !important;
+    }
+    
+    .acc-project-wrapper:not(.open) .acc-project-bar:hover .acc-icon {
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        background: transparent !important;
+    }
+    
+    .acc-project-wrapper:not(.open) .acc-project-bar:hover .acc-id {
+        opacity: 0.6 !important;
+    }
+}
