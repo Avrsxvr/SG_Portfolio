@@ -215,7 +215,7 @@ const MatterPhysicsEngine = () => {
     const ballRadius = isMobile ? 35 : 45;
 
     return (
-        <section id="technologies" className="physics-section">
+        <section id="skills" className="physics-section">
             <div style={{ textAlign: "center", zIndex: 10, marginBottom: "3rem", pointerEvents: "none", padding: "0 1rem" }}>
                 <h2 className="section-main-title" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 900, margin: 0, letterSpacing: "-0.01em" }}>
                     CORE <span className="accent-gradient-text">TECHNOLOGIES</span>
@@ -670,7 +670,7 @@ export default function Home() {
                                 {[
                                     { icon: Code, label: "Building", desc: "XR interaction systems", delay: 0.3 },
                                     { icon: Compass, label: "Exploring", desc: "AI in spatial environments", delay: 0.4 },
-                                    { icon: Briefcase, label: "Working on", desc: "Real-world AR applications", delay: 0.5 }
+                                    { icon: Briefcase, label: "Working on", desc: "Rehab-focused VR experiences", delay: 0.5 }
                                 ].map((item, idx) => (
                                     <motion.div 
                                         key={idx} 
@@ -720,7 +720,7 @@ export default function Home() {
                 </div>
             </section>
  
-            <section id="skills" className="capabilities-section">
+            <section id="capabilities" className="capabilities-section">
                 <motion.div 
                     className="carousel-section-header"
                     initial={{ opacity: 0, y: 40 }}
