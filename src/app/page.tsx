@@ -635,31 +635,12 @@ export default function Home() {
                                     </div>
                                 </motion.div>
 
-                                {/* Bento Tile 2: Location Map */}
-                                <motion.div 
-                                    className="bento-tile tile-location"
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-                                >
-                                    <div className="bento-map-bg">
-                                        <div className="map-grid-lines" />
-                                        <div className="map-pulse-dot-wrap">
-                                            <div className="map-pulse-ring" />
-                                            <div className="map-pulse-dot" />
-                                        </div>
-                                    </div>
-                                    <div className="bento-loc-text">
-                                        <MapPin size={16} color="var(--accent)" /> Based in Chennai
-                                    </div>
-                                </motion.div>
-
                                 {/* Bento Tile 3: Bio Text */}
                                 <motion.div 
                                     className="bento-tile tile-bio"
                                     initial={{ opacity: 0, x: 30 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                                    transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
                                 >
                                     <p className="bento-bio-main">
                                         I’m an <span className="accent">XR developer</span> building interactive AR/VR experiences using Unity and modern spatial technologies. I focus on creating practical, usable products that go beyond experimentation.
@@ -667,6 +648,22 @@ export default function Home() {
                                     <p className="bento-bio-sub">
                                         Alongside my personal projects, I collaborate on select freelance XR work. Recently, I’ve been exploring the intersection of spatial computing and AI to build more intuitive and adaptive experiences.
                                     </p>
+                                </motion.div>
+
+                                {/* Bento Tile 2: Location Card */}
+                                <motion.div 
+                                    className="bento-tile tile-location"
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                                >
+                                    <div className="location-image-wrapper">
+                                        <Image src="/images/Gemini_Generated_Image_jo0enpjo0enpjo0e.png" alt="Chennai Location" fill style={{ objectFit: 'cover', objectPosition: 'center top' }} quality={90} />
+                                    </div>
+                                    <div className="location-bottom-text">
+                                        <div className="pulse-dot-small" />
+                                        Currently living in Chennai
+                                    </div>
                                 </motion.div>
 
                                 {/* Bento Tiles 4, 5, 6: Currently */}

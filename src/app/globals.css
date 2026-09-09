@@ -3656,32 +3656,30 @@ a {
 /* ── BENTO BOX ABOUT SECTION ── */
 .bento-about-container {
     width: 100%;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: auto auto;
-    gap: 1.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
     padding: 0 5vw;
 }
 
 .bento-tile {
-    background: rgba(15, 15, 20, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 2rem;
-    padding: 2.5rem;
+    background: rgba(10, 10, 14, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1.2rem;
+    padding: 2rem;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow: hidden;
 }
 
 .bento-tile:hover {
-    background: rgba(20, 20, 25, 0.8);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-    transform: translateY(-4px);
+    background: rgba(15, 15, 20, 0.9);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
 /* Tile 1: Title */
@@ -3726,83 +3724,87 @@ a {
 }
 
 /* Tile 2: Location Map */
+/* Location Card Image */
 .tile-location {
     grid-column: span 1;
     display: flex;
-    align-items: flex-end;
-    padding: 1.5rem;
-}
-
-.bento-map-bg {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at center, rgba(0, 210, 255, 0.05) 0%, transparent 70%);
-    z-index: 0;
-}
-
-.map-grid-lines {
-    position: absolute;
-    inset: 0;
-    background-image: 
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 20px 20px;
-    opacity: 0.5;
-}
-
-.map-pulse-dot-wrap {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.map-pulse-dot {
-    width: 12px;
-    height: 12px;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 15px var(--accent);
-}
-
-.map-pulse-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 2px solid var(--accent);
-    animation: pulseMap 2s infinite;
-}
-
-@keyframes pulseMap {
-    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
-}
-
-.bento-loc-text {
+    flex-direction: column;
+    padding: 0; /* remove padding so image hits edges */
+    min-height: 220px;
     position: relative;
-    z-index: 1;
+    overflow: hidden;
+    border-radius: 1.2rem;
+}
+
+.location-image-wrapper {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    min-height: 160px;
+}
+
+.location-image-wrapper img {
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tile-location:hover .location-image-wrapper img {
+    transform: scale(1.05);
+}
+
+.location-sky-text {
+    position: absolute;
+    top: 1.5rem;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    z-index: 2;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    pointer-events: none;
+}
+
+.location-bottom-text {
+    padding: 1rem;
+    background: rgba(10, 10, 14, 0.95);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 0.5rem 1rem;
-    border-radius: 1rem;
-    font-size: 0.85rem;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.8);
     font-weight: 500;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    z-index: 2;
+    white-space: nowrap;
+}
+
+.pulse-dot-small {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulseSmall 2s infinite;
+}
+
+@keyframes pulseSmall {
+    0% { transform: scale(0.95); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(0.95); opacity: 1; }
 }
 
 /* Tile 3: Bio Text */
 .tile-bio {
-    grid-column: span 3;
+    grid-column: span 2;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    justify-content: center;
+    gap: 1.2rem;
 }
 
 .bento-bio-main {
@@ -3842,10 +3844,9 @@ a {
 }
 
 .tile-status:hover .status-icon-wrap {
-    background: rgba(0, 210, 255, 0.1);
-    border-color: rgba(0, 210, 255, 0.3);
+    background: rgba(0, 210, 255, 0.15);
+    border-color: rgba(0, 210, 255, 0.4);
     color: #fff;
-    transform: scale(1.05);
 }
 
 .status-text-wrap {
@@ -3874,89 +3875,92 @@ a {
 /* Responsive Bento */
 @media (max-width: 900px) {
     .bento-about-container {
-        grid-template-columns: repeat(3, 1fr); /* Force 3 columns on mobile */
-        padding: 0 3vw;
-        gap: 0.5rem;
+        grid-template-columns: 1fr; /* 1 column on mobile */
+        padding: 0 5vw;
+        gap: 1rem;
     }
     
     .bento-tile {
-        padding: 0.8rem;
-        border-radius: 1rem;
+        padding: 1.5rem;
+        border-radius: 1.5rem;
     }
     
     .tile-title {
-        grid-column: span 2; /* Title takes 2/3 */
+        grid-column: span 1;
     }
     
     .bento-badge {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.55rem;
-        margin-bottom: 0.8rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.7rem;
+        margin-bottom: 1rem;
     }
 
     .bento-huge-title {
-        font-size: clamp(1.8rem, 8vw, 2.5rem);
-        margin-bottom: 0.5rem;
+        font-size: clamp(2.5rem, 10vw, 3.5rem);
+        margin-bottom: 0.8rem;
     }
 
     .bento-tagline {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
     
     .tile-location {
-        grid-column: span 1; /* Map takes 1/3 */
-        min-height: 120px;
-        padding: 0.5rem;
-        justify-content: flex-end;
+        grid-column: span 1;
+        min-height: 180px;
+        padding: 1rem;
+        justify-content: flex-start;
     }
 
     .bento-loc-text {
-        font-size: 0.5rem;
-        padding: 0.3rem 0.4rem;
-        text-align: center;
-        flex-direction: column;
-        gap: 0.2rem;
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+        text-align: left;
+        flex-direction: row;
+        gap: 0.4rem;
+        position: absolute;
+        bottom: 1.5rem;
+        left: 1.5rem;
     }
     
     .tile-bio {
-        grid-column: span 3; /* Bio takes 3/3 */
-        gap: 0.8rem;
-        padding: 1.2rem;
+        grid-column: span 1;
+        gap: 1rem;
+        padding: 1.5rem;
     }
 
     .bento-bio-main {
-        font-size: 1rem;
+        font-size: 1.15rem;
     }
 
     .bento-bio-sub {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
     }
     
     .tile-status {
-        grid-column: span 1; /* Status takes 1/3 each */
-        padding: 0.8rem 0.5rem;
-        flex-direction: column; 
+        grid-column: span 1; 
+        padding: 1.2rem 1.5rem;
+        flex-direction: row; 
         align-items: center;
-        text-align: center;
-        gap: 0.5rem;
+        text-align: left;
+        gap: 1rem;
     }
 
     .status-icon-wrap {
-        padding: 0.5rem;
+        padding: 0.8rem;
     }
 
     .status-icon-wrap svg {
-        width: 16px;
-        height: 16px;
+        width: 20px;
+        height: 20px;
     }
 
     .bento-status-label {
-        font-size: 0.5rem;
+        font-size: 0.7rem;
     }
 
     .bento-status-desc {
-        font-size: 0.7rem;
-        line-height: 1.2;
+        font-size: 0.95rem;
+        line-height: 1.3;
     }
     
     /* Social Bar & Nav Overlap Fix on Mobile */
