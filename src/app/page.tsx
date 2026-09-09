@@ -748,7 +748,7 @@ export default function Home() {
                         </h3>
                         <p>Download my detailed resume for more information.</p>
                     </div>
-                    <a href="/Sujal_Resume(XR).pdf" download className="resume-download-btn">
+                    <a href="/Sujal_Gupta_Resume.pdf" download className="resume-download-btn">
                         <FileText size={20} />
                         <span>Download Resume</span>
                         <div className="download-icon-wrap"><Download size={14} /></div>
