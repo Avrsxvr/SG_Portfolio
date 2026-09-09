@@ -3909,19 +3909,19 @@ a {
     /* Location tile — image based, no padding override */
     .tile-location {
         grid-column: span 1;
-        min-height: 140px;
+        min-height: 100px;
         padding: 0;              /* image hits edges */
     }
 
     .location-image-wrapper {
-        min-height: 140px;
+        min-height: 100px;
     }
 
     .location-bottom-text {
-        font-size: 0.65rem;
-        padding: 0.6rem 0.8rem;
+        font-size: 0.55rem;
+        padding: 0.4rem 0.6rem;
         white-space: normal;
-        line-height: 1.2;
+        line-height: 1.1;
     }
     
     .tile-bio {
